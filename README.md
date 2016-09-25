@@ -1,72 +1,99 @@
 
-# ADS1110 AVR DRIVER LIBRARY
+# MCP9802 AVR DRIVER LIBRARY
 
-The __ADS1110__ is a 16-Bit Single-Channel (Single-Ended or Differential) ADC IC with Onboard Reference (2.048V), PGA & HW I2C capabilities
-in a SOT-23-6 package.
+## Introduction
 
-This library contains a driver for the ADS1110 offering control over all its Configuration Settings and giving the user the 
-ability to recieve either raw data, a voltage reading or a percentage reading from the device either in Single-Shot or Continuous mode.
+The __MCP9802__ is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities and hardware I2C interface.
 
+This library contains a robust driver for the MCP9802 which exposes all its Configuration, Hysteresis, Limit & Alert Settings; working in degrees Celsius or Fahrenheit; and, Integer or Floating-Point data manipulation.
 
 ## Repository Contents
 
-* **ADS1110.h** - Header file of the library.
-* **ADS1110.cpp** - Compilation file of the library.
-* **/examples** - Contains an example sketch for testing all Configuration Settings & Modes of Operation controllable by the library.
+* **MCP9802.h** - Header file of the library.
+* **MCP9802.cpp** - Compilation file of the library.
+* **DegreeConverter.h** - Header file for Library helper methods.
+* **DegreeConverter.cpp** - Compilation file for Library helper methods.
+* **/examples** - 
+- **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing the MCP9802 is hooked-up and operating correctly.
+- **MCP9802_Usage/MCP9802_Usage.ino** - A much more detailed sketch offering a complete usage illustration, as well as a rubust testing mechanism.
 * **/extras** - Complementary documentation (End-User License, etc.)
 * **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
 * **library.properties** - General library properties for the Arduino package manager.
 * **README.md** - The readme file for this library.
 * **library.json** - JSON file for the Arduino package manager.
 
-
 ## HOOK-UP
 
-* __PIN 1__ - Connect __V+__ to voltage source to be measured.
-* __PIN 2__ - Connect __GND__ to Arduino GND.
-* __PIN 3__ - Connect __SCL__ to Arduino PIN A5 with a 2K2 pull-up resistor.
-* __PIN 4__ - Conntect __SDA__ to Arduino PIN A4 with a 2K2 pull-up resistor.
-* __PIN 5__ - Connect __VCC__ to Arduino 5V output.
-* __PIN 6__ - Connect __V-__ either to: (1) Arduino GND (for Single-Ended voltage readings ranging 0-2.048V); or to (2) an external voltage reference of 2.048V (for Single-Ended voltage readings ranging 0-4.096V); or to (3) A 'negative' input (for differential voltage readings between positive and 'negative' inputs).
+* __PIN 1 (VCC)__ - Connect VCC to the Arduino's 5V output
+* __PIN 2 (GND)__ - Connect GND to the Arduino's GND
+* __PIN 3 (ALERT)__ - Connect ALERT to the Arduino's Digital Pin 2
+* __PIN 4 (SCL)__ - Conntect SCL to the Arduino's PIN A5 with a 2K2 pull-up resistor
+* __PIN 5 (SDA)__ - Conntect SDA to the Arduino's PIN A4 with a 2K2 pull-up resistor
 
->__Note__: The 'negative' input is put in brackets here because it isn't a 'real' negative voltage - 
-i.e. with relation to the circuit's common ground - only with relation to the positive input side!
+* __DECOUPING__: Connect a 0.1uF Ceramic Capacitor between the MCP9802's VCC & GND PINS
 
-* __DECOUPING__: Connect a 0.1uF Ceramic Capacitor between VCC & GND PINS.
+## General Notes
 
+__1. I2C Communications Library__
 
-## I2C COMMUNICATION
+This library uses the '[WSWire](https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire)' library for I2C communication between the contoller IC (Master) and the MCP9802 (Slave), so it is __NECESSARY__ to have it installed prior to using the current libraty. 
 
->__INPORTANT__: This library uses the '[WSWire](https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire)' library for I2C communication 
-between the contoller IC (Master) and thethe ADS1110 (Slave), so it is NECESSARY to have it installed prior to using the current libraty. 
->
->Alternatively, if you wish to use the '[Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire)' - or any other I2C library for that matter - simply change the following line the the 'ADS1110.h' file:
+Alternatively, if you wish to use the '[Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire)' - or any other I2C library for that matter - simply change the following line the the __MCP9802.h__ file:
 ```
 #include <WSWire.h>
 ```
-> to this:
+to this:
 ```
 #include <Wire.h>  // or to whatever I2C library name you are using.
 ```
+As noted above, whichever library you intend to use for this purpose __must be alredy installed__ for the MCP9802 library to work.
 
-> As noted above, whichever library you intend to use for this purpose __must be alredy installed__ for the ADS1110 library to work.
+__2. Shutdown & Conversion Mode__
 
+The first bit of the configuration byte controls the device mode of operation, namely: ON, in which the device operates in 'CONTINUOUS' mode,
+or OFF - or more precisely HYBERNATE (as I2C communication remains active), in which the device operates in 'SINGLE-SHOT' nmode. As such, setting 
+the 'CONVERSION MODE' of the device to 'CONTINUOUS' will effectively ensure that it is 'ON', while setting it to 'SINGLE-SHOT' mode will turn it OFF 
+(or more accurately, put it in hybernate mode).
+
+__3. Hysteresis & Limit Registers Resolution__
+
+The Temperature register has a setteble range of 9 to 12-BIT (0.5 to 0.0625 degrees Celsius respectively). However, both the LIMIT and HYSTERESIS 
+registers only have a 9-BIT fixed resolution. This means these registers can only be set with a maximum resolution of 0.5 degrees Celsius. 
+Hence, while the relevant functions (e.g. setTempC(); ) will happily accept any float value within the premmitted parameter range (-55C to 125C) 
+for either of these two registers, this float value will be automatically rounded to the nearest 0.5C.
+
+__4. Degrees Celsius & Fahrenheit__
+
+The libraty offers the option of getting/setting all termperature values (Abmient [read-only], Limit [read-write] and/or Hysteresis [read-write]) 
+in either degrees Celsuis or Fahrenheit. These can be obtained in a floating point format or, if prefered, in a x16 integer format to speed-up 
+conversion calculations and save memory space. 
+
+__5. Degress Fahrenheit Precision Limitations__
+
+As the MCP9802 was designed primerily to work in a degree Celsuis scheme, all Fahrenheit values obtained (or custom set by the user) 
+can only represent approximations of the precise Celsius values generated or stored by the device. This limitation is particualarly 
+noticable when setting the LIMIT or HYSTERESIS registers to custom Fahrenheit values, as a double operation takes place, namely: 
+rounding the given value to the nearest 0.5 degree Celisus and the subsequent conversion of this figure to the equivalent Fahrenheit value.
+
+__6. Alert Functionality__
+
+The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up betweem the ALERT pin and VCC.
 
 ## I2C ADDRESSES
 
 Each ADS1110 has 1 of 8 possible I2C addresses (factory hardwired & recognized by its specific part number & top marking 
 on the package itself):
 
-| PART NO.  | BIN     | HEX  | DEC | MARKING |
-|-----------|---------|------|-----|---------|
-| ADS1110A0 | 1001000 | 0x48 | 72  | ED0     |
-| ADS1110A1 | 1001001 | 0x49 | 73  | ED1     |
-| ADS1110A2 | 1001010 | 0x4A | 74  | ED2     |
-| ADS1110A3 | 1001011 | 0x4B | 75  | ED3     |
-| ADS1110A4 | 1001100 | 0x4C | 76  | ED4     |
-| ADS1110A5 | 1001101 | 0x4D | 77  | ED5     |
-| ADS1110A6 | 1001110 | 0x4E | 78  | ED6     |
-| ADS1110A7 | 1001111 | 0x4F | 79  | ED7     |
+| PART NO.        | BIN      | HEX  | DEC | MARKING |
+|-----------------|----------|------|-----|---------|
+| MCP9802A0T-M/OT | 01001000 | 0x48 | 72  | JKNN    |
+| MCP9802A1T-M/OT | 01001001 | 0x49 | 73  | JLNN    |
+| MCP9802A2T-M/OT | 01001010 | 0x4A | 74  | JMNN    |
+| MCP9802A3T-M/OT | 01001011 | 0x4B | 75  | JPNN    |
+| MCP9802A4T-M/OT | 01001100 | 0x4C | 76  | JQNN    |
+| MCP9802A5T-M/OT | 01001101 | 0x4D | 77  | JRNN    |
+| MCP9802A6T-M/OT | 01001110 | 0x4E | 78  | JSNN    |
+| MCP9802A7T-M/OT | 01001111 | 0x4F | 79  | JTNN    |
 
 
 ## LIBRARY INSTALLATION & SETUP
@@ -76,104 +103,246 @@ Begin by installing the library either by using the Arduino IDE's Installation W
 Next, include the library at the top of the sketch as follows:
 
 ```
-#include <ADS1110.h>
+#include <MCP9802.h>
 ```
 
-At this point you can construct a new ADS1110 object use the following line (at the top of the sketch after the 'include' line):
+At this point you can construct a new MPC9802 object(s) by using the following command (at the top of the sketch after the 'include' line):
 
 ```
-ADS1110 device_name(device_address);
+MCP9802 device_name(device_address);
 ```
 
 >__NOTE__: replace the '__device_name__' above with a name of your choice. Also, make sure to replace the variable '__device_address__' with 
 the specific I2C address of your device - see I2C ADDRESSES section above.
 
 
-## LIBRARY FUNCTIONS
+## LIBRARY METHODS
 
-With the library installed & included in the sketch, and an ADS1110 object initiallized, the following functions are available 
-(see the sketch itself for actual examples):
+With the library installed & included in the sketch, and an MCP9802 object initiallized, the following functions are available 
+(see the usage example sketch for a detailed implementation):
+
+__Notes About Methods' Return Values:__  
+All 'get' methods return some sort of value (e.g. temp reading, hysteresis setting, etc.), while all 'set' methods return nothing. Nevertheless, ALL methods implicitly update the library's __I2C _comBuffer__ (=communication buffer) after each I2C transmission. The reason for this functional design is to maintain structural coherance between the 'get' and 'set' methods. As 'get' methods cannot return both the desired value and the I2C transmission's result simultaniously. Consequently, if the relevant value hasn't been obtained by a particular 'get' method, the user can simply check the content of the _comBuffer to see what error occured. Similarly, it is possible to check if a particular setting has been successfully applied via a 'set' method either by preforming the corresponding 'get' method - e.g. getHystC() after using setHystC() - or by checking the content of the _comBuffer (0 indicates a successful transmission, 1-6 indicate an error as listed below). 
 
 __ping();__                                  
-Parameters: None  
-Description: Searches for the ADS1110 at the defined I2C Bus address  
-Returns: Byte containing the relevant success/error code as follows:  
-
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Searches for the MCP9802 at the pre-defined I2C Bus address &amp; returns byte with the relevant success/error code, as follows:  
 0 ... Success (no error)  
 1 ... Buffer overflow  
 2 ... Address sent, NACK received  
 3 ... Data send, NACK received  
 4 ... Other error (lost bus arbitration, bus error, etc.)  
 5 ... Timed-out while trying to become Bus Master  
-6 ... Timed-out while waiting for data to be sent
+6 ... Timed-out while waiting for data to be sent<br>
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte  
 
-__configInfo();__  
-Parameters: None.  
-Description: Returns a printable String with the device's I2C address & current Configuration Settings (Gain, Sample Rate & Mode)  
-Returns: String
+__getTempC16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Celsius times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
-__setGain();__  
-Parameters: GAIN_1 / GAIN_2 / GAIN_4 / GAIN_8  
-Description: Sets the Gain of the ADS1110 (i.e. 1 / 2 / 4 / 8)  
-Default: GAIN_1  
-Returns: Byte containing the relevant success/error code (see list above)
+__getTempC();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Celsius  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
-__setRate();__  
-Parameters: SPS_15 / SPS_30 / SPS_60 / SPS_240  
-Description: Sets the Sample Rate of the ADS1110 (i.e. 15 / 30 / 60 / 240 Samples per Second)  
-Default: 15_SPS  
-Returns: Byte containing the relevant success/error code (see list above)
+__getTempF16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None   
+Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Fahrenheit times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
-__setMode ();__  
-Parameters: CONTINUOUS / SINGLE_SHOT  
-Description: Sets the device's Mode of Operation (i.e. Continuous Conversions/Single Conversion)  
-Default: CONTINUOUS  
-Returns: Byte containing the relevant success/error code (see list above)
+__getTempF();__  
+Parameters:&nbsp;&nbsp;&nbsp;None   
+Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Fahrenheit    
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+
+__getHystC16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register value in degrees Celsius times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+
+__getHystC();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register value in degrees Celsius   
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+
+__getHystF16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register setting in degrees Fahrenheit times 16    
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+
+__getHystF();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register setting in degrees Fahrenheit   
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+
+__getLimitC16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Celsius times 16 
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+
+__getLimitC();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Celsius    
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+
+__getLimitF16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Fahrenheit times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+
+__getLimitF();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Fahrenheit   
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+
+__getAlertType();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current alert type setting (0 = COMPARATOR / 1 = INTERRUPT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+
+__getAlertMode();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current alert mode setting (0 = ACTIVE-LOW / 1 = ACTIVE-HIGH)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__getFaultQueue();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Fault Queue setting (1 / 2 / 4 / 6 fault readings - i.e. below Hysteresis or above the Limit - before activating the alert)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+__getResolution();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Resolution setting (9 = 9-BIT / 10 = 10-BIT / 11 = 11-BIT / 12 = 12-BIT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+
+__getConMode();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Conversion Mode setting (0 = CONTINUOUS / 1 = SINGLE-SHOT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+
+__setHyst16();__  
+Parameters:&nbsp;&nbsp;&nbsp;int (range: -880 to +2000)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Celsius times 16   
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setHystC();__  
+Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55.0 to +125.0)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Celsius  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setHystF16();__  
+Parameters:&nbsp;&nbsp;&nbsp;int (range: 1072 - to +4112)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Fahrenheit times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setHystF();__  
+Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -67.0 to +257.0)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Fahrenheit  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setLimitC16();__  
+Parameters:&nbsp;&nbsp;&nbsp;int (range: -880 to +2000)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Celsius times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setLimitC();__  
+Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55.0  to +125.0)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Celsius   
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setLimitF16();__  
+Parameters:&nbsp;&nbsp;&nbsp;int (range: -1072 to 4112)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Fahrenheit times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setLimitF();__  
+Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -67.0 to +257.0)  
+Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Fahrenheit  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setAlertType();__  
+Parameters:&nbsp;&nbsp;&nbsp;COMP / INT  
+Description:&nbsp;&nbsp;&nbsp;Sets the alert output type (COMPARATOR / INTERRUPT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setAlertMode();__  
+Parameters:&nbsp;&nbsp;&nbsp;ACTIVE_LOW / ACTIVE_HIGH  
+Description:&nbsp;&nbsp;&nbsp;Sets the alert output mode (ACTIVE-LOW / ACTIVE-HIGH)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setFaultQueue();__  
+Parameters:&nbsp;&nbsp;&nbsp;FQ1 / FQ2 / FQ4 / FQ6  
+Description:&nbsp;&nbsp;&nbsp;Sets the Fault Queue value (FQ1 = 1 Fault / FQ2 = 2 Faults / FQ4 = 4 Faults / FQ6 = 6 Faults)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setResolution();__  
+Parameters:&nbsp;&nbsp;&nbsp;RES_9 / RES_10 / RES_11 / RES_12  
+Description:&nbsp;&nbsp;&nbsp;Sets the Resolution value (RES_9 = 9-BIT / RES_10 = 10-BIT / RES_11 = 11-BIT / RES_12 = 12-BIT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
+__setConMode();__  
+Parameters:&nbsp;&nbsp;&nbsp;CONT / SINGLE  
+Description:&nbsp;&nbsp;&nbsp;Sets the Conversion Mode (CONTINUOUS / SINGLE-SHOT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __reset();__  
-Parameters: None  
-Description: Resets the ADS1110 to its default Configuration Settings (namely: GAIN_1, 15_SPS, CONTINUOUS)  
-Returns: Byte containing the relevant success/error code (see list above)
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Resets the device to power-up default settings (except for the TEMP Register which is Read-Only), as follows:
+* REG POINTER:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x00 (TEMP REGISTER)
+* CONFIG:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x00
+* DEVICE MODE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON
+* ALERT OUTPUT TYPE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMPARATOR
+* ALERT OUTPUT MODE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTIVE-LOW
+* FAULT-QUEUE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 FAULT
+* RESOLUTION:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9-BIT
+* CONVERSION MODE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONTINUOUS
+* LIMIT (DATA):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0xA000 (80°C)
+* HYST (DATA):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x9600 (75°C)<br>
 
-__singleCon();__  
-Parameters: None  
-Conditions: Works only in __SINGLE CONVERSION__ mode  
-Description: Obtains the result of a single conversion  
-Returns: Int with actual value if successful or -1 if error occured  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
-__readData();__  
-Parameters: None  
-Description: Obtains the latest conversion result from the ADS1110  
-Returns: Int witg actual value if successful or -1 if error occured   
+__singleConC16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None   
+Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
+Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Celsius times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
-__readVoltage();__  
-Parameters: None  
-Returns: Obtains the latest conversion result translated into Volts  
-Returns: Float with actual value if successful or -1 if error occured    
+__singleConC();__  
+Parameters:&nbsp;&nbsp;&nbsp;None   
+Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
+Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Celsius  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
-__readPercentage();__  
-Parameters: None  
-Description: Obtains the latest conversion result translated into Percentage (0-100%)  
-Returns: Int with actual value if successful or -1 if error occured 
+__singleConF16();__  
+Parameters:&nbsp;&nbsp;&nbsp;None   
+Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
+Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Fahrenheit times 16  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
+__singleConF();__  
+Parameters:&nbsp;&nbsp;&nbsp;None   
+Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
+Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Fahrenheit  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
-And, lastly, if for whatever reason you wish to destruct an existing ADS1110 object, you can use the following line to do so:
+__getComResult();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;Returns the latest I2C Communication result (see Success/Error codes above)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+
+And, finally, if for whatever reason you wish to destruct an existing MCP9802 object, you can use the following line to do so:
 
 ```
-~ADS1110 device_name();
+~MCP9802 device_name();
 ```
+>__NOTE__: replace the '__device_name__' above with the name of your MCP9802 device.
 
+## RUNNING THE EXAMPLE SKETCHES
 
-## RUNNING THE EXAMPLE SKETCH
-
-1) Hook-up the ADS1110 to the Arduino as explained above.
-2) If you like, connect a 10K potentiometer to the ADS1110 V+ PIN (potentimeter's first pin goes to GND, 
-middle pin to V+, and third pin to 5V).
-3) Upload the sketch to the Arduino.
-4) Open the Serial Communications Window (make sure the baud-rate is set to 9600).
-5) You should be able to see detailed feedback from running each of the possible functions of the library 
-(when you get to the part where readings are carried out, play with the potentiomer to check out changes 
-in the readings based on the input voltage).
+1) Hook-up the MCP9802 to the Arduino as explained above.
+2) If you like, connect a LED with an appropriate series resistor between the MCP9802's ALERT pin (PIN 3) and ground
+3) Upload the relevant example sketch to the Arduino.
+4) Open the Serial Communications Window (make sure the baud-rate is set to 9600 or change them in the sketch to match your Serial Port buad rate).
 
 
 ## BUG REPORTS
