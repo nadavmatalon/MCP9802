@@ -3,7 +3,7 @@
 
 ## Introduction
 
-The __MCP9802__ is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities and hardware I2C interface.
+The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities and hardware I2C interface.
 
 This library contains a robust driver for the MCP9802 which exposes all its Configuration, Hysteresis, Limit & Alert Settings; working in degrees Celsius or Fahrenheit; and, Integer or Floating-Point data manipulation.
 
@@ -29,7 +29,6 @@ This library contains a robust driver for the MCP9802 which exposes all its Conf
 * __PIN 3 (ALERT)__ - Connect ALERT to the Arduino's Digital Pin 2
 * __PIN 4 (SCL)__ - Conntect SCL to the Arduino's PIN A5 with a 2K2 pull-up resistor
 * __PIN 5 (SDA)__ - Conntect SDA to the Arduino's PIN A4 with a 2K2 pull-up resistor
-
 * __DECOUPING__: Connect a 0.1uF Ceramic Capacitor between the MCP9802's VCC & GND PINS
 
 ## General Notes
@@ -121,7 +120,7 @@ the specific I2C address of your device - see I2C ADDRESSES section above.
 With the library installed & included in the sketch, and an MCP9802 object initiallized, the following functions are available 
 (see the usage example sketch for a detailed implementation):
 
-__Notes About Methods' Return Values:__  
+__Note About Methods' Return Values:__  
 All 'get' methods return some sort of value (e.g. temp reading, hysteresis setting, etc.), while all 'set' methods return nothing. Nevertheless, ALL methods implicitly update the library's __I2C _comBuffer__ (=communication buffer) after each I2C transmission. The reason for this functional design is to maintain structural coherance between the 'get' and 'set' methods. As 'get' methods cannot return both the desired value and the I2C transmission's result simultaniously. Consequently, if the relevant value hasn't been obtained by a particular 'get' method, the user can simply check the content of the _comBuffer to see what error occured. Similarly, it is possible to check if a particular setting has been successfully applied via a 'set' method either by preforming the corresponding 'get' method - e.g. getHystC() after using setHystC() - or by checking the content of the _comBuffer (0 indicates a successful transmission, 1-6 indicate an error as listed below). 
 
 __ping();__                                  
@@ -134,12 +133,12 @@ Description:&nbsp;&nbsp;&nbsp;Searches for the MCP9802 at the pre-defined I2C Bu
 4 ... Other error (lost bus arbitration, bus error, etc.)  
 5 ... Timed-out while trying to become Bus Master  
 6 ... Timed-out while waiting for data to be sent<br>
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte  
 
 __getTempC16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __getTempC();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
@@ -149,62 +148,62 @@ Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 __getTempF16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None   
 Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __getTempF();__  
 Parameters:&nbsp;&nbsp;&nbsp;None   
 Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Fahrenheit    
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getHystC16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register value in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __getHystC();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register value in degrees Celsius   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getHystF16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register setting in degrees Fahrenheit times 16    
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __getHystF();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register setting in degrees Fahrenheit   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getLimitC16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Celsius times 16 
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __getLimitC();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Celsius    
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getLimitF16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __getLimitF();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Fahrenheit   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getAlertType();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current alert type setting (0 = COMPARATOR / 1 = INTERRUPT)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
 __getAlertMode();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current alert mode setting (0 = ACTIVE-LOW / 1 = ACTIVE-HIGH)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __getFaultQueue();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
@@ -213,84 +212,84 @@ Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 __getResolution();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Resolution setting (9 = 9-BIT / 10 = 10-BIT / 11 = 11-BIT / 12 = 12-BIT)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
 __getConMode();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Conversion Mode setting (0 = CONTINUOUS / 1 = SINGLE-SHOT)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
 __setHyst16();__  
 Parameters:&nbsp;&nbsp;&nbsp;int (range: -880 to +2000)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Celsius times 16   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setHystC();__  
 Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55.0 to +125.0)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Celsius  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setHystF16();__  
 Parameters:&nbsp;&nbsp;&nbsp;int (range: 1072 - to +4112)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setHystF();__  
 Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -67.0 to +257.0)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Fahrenheit  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setLimitC16();__  
 Parameters:&nbsp;&nbsp;&nbsp;int (range: -880 to +2000)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setLimitC();__  
 Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55.0  to +125.0)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Celsius   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setLimitF16();__  
 Parameters:&nbsp;&nbsp;&nbsp;int (range: -1072 to 4112)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setLimitF();__  
 Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -67.0 to +257.0)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Fahrenheit  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setAlertType();__  
 Parameters:&nbsp;&nbsp;&nbsp;COMP / INT  
 Description:&nbsp;&nbsp;&nbsp;Sets the alert output type (COMPARATOR / INTERRUPT)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setAlertMode();__  
 Parameters:&nbsp;&nbsp;&nbsp;ACTIVE_LOW / ACTIVE_HIGH  
 Description:&nbsp;&nbsp;&nbsp;Sets the alert output mode (ACTIVE-LOW / ACTIVE-HIGH)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setFaultQueue();__  
 Parameters:&nbsp;&nbsp;&nbsp;FQ1 / FQ2 / FQ4 / FQ6  
 Description:&nbsp;&nbsp;&nbsp;Sets the Fault Queue value (FQ1 = 1 Fault / FQ2 = 2 Faults / FQ4 = 4 Faults / FQ6 = 6 Faults)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setResolution();__  
 Parameters:&nbsp;&nbsp;&nbsp;RES_9 / RES_10 / RES_11 / RES_12  
 Description:&nbsp;&nbsp;&nbsp;Sets the Resolution value (RES_9 = 9-BIT / RES_10 = 10-BIT / RES_11 = 11-BIT / RES_12 = 12-BIT)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setConMode();__  
 Parameters:&nbsp;&nbsp;&nbsp;CONT / SINGLE  
 Description:&nbsp;&nbsp;&nbsp;Sets the Conversion Mode (CONTINUOUS / SINGLE-SHOT)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __reset();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Resets the device to power-up default settings (except for the TEMP Register which is Read-Only), as follows:
-* REG POINTER:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x00 (TEMP REGISTER)
-* CONFIG:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x00
-* DEVICE MODE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON
+* REG POINTER:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x00 (TEMP REGISTER)
+* CONFIG:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x00
+* DEVICE MODE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON
 * ALERT OUTPUT TYPE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMPARATOR
 * ALERT OUTPUT MODE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTIVE-LOW
 * FAULT-QUEUE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 FAULT
@@ -299,36 +298,36 @@ Description:&nbsp;&nbsp;&nbsp;Resets the device to power-up default settings (ex
 * LIMIT (DATA):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0xA000 (80°C)
 * HYST (DATA):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x9600 (75°C)<br>
 
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __singleConC16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None   
 Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
 Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __singleConC();__  
 Parameters:&nbsp;&nbsp;&nbsp;None   
 Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
 Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Celsius  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __singleConF16();__  
 Parameters:&nbsp;&nbsp;&nbsp;None   
 Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
 Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
 
 __singleConF();__  
 Parameters:&nbsp;&nbsp;&nbsp;None   
 Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
 Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Fahrenheit  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getComResult();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;Returns the latest I2C Communication result (see Success/Error codes above)  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
 And, finally, if for whatever reason you wish to destruct an existing MCP9802 object, you can use the following line to do so:
 
