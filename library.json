@@ -3,7 +3,6 @@
 		"frameworks": "AVR",
 		"keywords": "MCP9802, SENSOR, I2C, 12-BIT, HYSTERESIS",
 		"description": "Driver for MCP9802: 12-bit Temperature Sensor with an I2C Interface",
-		"url": "_______________________",
 		"downloadUrl": "https://github.com/nadavmatalon/MCP9802/archive/master.zip",
 		"authors":
 		{
