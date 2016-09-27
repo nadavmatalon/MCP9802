@@ -16,6 +16,7 @@ This library contains a robust driver for the MCP9802 which exposes all its Conf
 * **/examples** - 
 - **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing the MCP9802 is hooked-up and operating correctly.
 - **MCP9802_Usage/MCP9802_Usage.ino** - A much more detailed sketch offering a complete usage illustration, as well as a rubust testing mechanism.
+- **/MCP9802_Info/MCP9802_Info.ino** - A short sketch showing how to generate a printable device information String of the MCP9802's current settings (i.e. Configuration, Limit &anp; Hysteresis registers).
 * **/extras** - Complementary documentation (End-User License, etc.)
 * **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
 * **library.properties** - General library properties for the Arduino package manager.
@@ -76,7 +77,18 @@ rounding the given value to the nearest 0.5 degree Celisus and the subsequent co
 
 __6. Alert Functionality__
 
-The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up betweem the ALERT pin and VCC.
+The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work 
+(this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal 
+pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. 
+However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) 
+hooked-up betweem the ALERT pin and VCC.
+
+__7. Device Information String__
+
+It is now possible to extend the MCP9802 Library to include a function for generating a pritable device information string showing all the 
+relevant details about the devices current Configuration, Limit & Hysteresis settings. As the additional functionality comes at the cost 
+of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the 
+'MCP9802_Info' example sketch for detailed explanation and an actual usage demo.
 
 ## I2C ADDRESSES
 
@@ -329,7 +341,16 @@ Parameters:&nbsp;&nbsp;&nbsp;None
 Description:&nbsp;&nbsp;Returns the latest I2C Communication result (see Success/Error codes above)  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
-And, finally, if for whatever reason you wish to destruct an existing MCP9802 object, you can use the following line to do so:
+###Extended Functionality*
+
+(* requires including the 'MCP9802InfoStr_h' file at the top of the sketch)
+
+__MCP9802InfoStr();__  
+Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
+Description:&nbsp;&nbsp;Returns printable string containing detailed information about the device's current settings 
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
+
+Finally, if for whatever reason you wish to destruct an existing MCP9802 object, you can use the following line to do so:
 
 ```
 ~MCP9802 device_name();
