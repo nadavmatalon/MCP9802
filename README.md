@@ -88,7 +88,7 @@ __7. Device Information String__
 It is now possible to extend the MCP9802 Library to include a function for generating a pritable device information string showing all the 
 relevant details about the devices current Configuration, Limit & Hysteresis settings. As the additional functionality comes at the cost 
 of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the 
-'MCP9802_Info' example sketch for detailed explanation and an actual usage demo.
+[MCP9802_Info](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_Info/MCP9802_Info.ino) example sketch for detailed explanation and an actual usage demo.
 
 ## I2C ADDRESSES
 
