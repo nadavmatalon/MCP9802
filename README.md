@@ -75,7 +75,7 @@ can only represent approximations of the precise Celsius values generated or sto
 noticable when setting the LIMIT or HYSTERESIS registers to custom Fahrenheit values, as a double operation takes place, namely: 
 rounding the given value to the nearest 0.5 degree Celisus and the subsequent conversion of this figure to the equivalent Fahrenheit value.
 
-__6. Alert Functionality__
+__6. Alert Output__
 
 The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work 
 (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal 
