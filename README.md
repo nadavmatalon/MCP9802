@@ -341,6 +341,14 @@ Parameters:&nbsp;&nbsp;&nbsp;None
 Description:&nbsp;&nbsp;Returns the latest I2C Communication result (see Success/Error codes above)  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
+__Destructor__  
+If, for whatever reason, you wish to destruct an existing MCP9802 object, you can use the following line to do so:
+
+```
+~MCP9802 device_name();
+```
+>__NOTE__: replace the '__device_name__' above with the name of your MCP9802 device.
+
 ###Extended Functionality*
 
 (* requires including the 'MCP9802InfoStr_h' file at the top of the sketch)
@@ -349,13 +357,6 @@ __MCP9802InfoStr();__
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
 Description:&nbsp;&nbsp;Returns printable string containing detailed information about the device's current settings 
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
-
-Finally, if for whatever reason you wish to destruct an existing MCP9802 object, you can use the following line to do so:
-
-```
-~MCP9802 device_name();
-```
->__NOTE__: replace the '__device_name__' above with the name of your MCP9802 device.
 
 ## RUNNING THE EXAMPLE SKETCHES
 
