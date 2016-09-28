@@ -37,12 +37,14 @@ getFaultQueue	KEYWORD2
 getResolution	KEYWORD2
 getConMode	KEYWORD2
 getTempUnit	KEYWORD2
+getTempMultiplier	KEYWORD2
 setAlertType	KEYWORD2
 setAlertMode	KEYWORD2
 setFaultQueue	KEYWORD2
 setResolution	KEYWORD2
 setConMode	KEYWORD2
 setTempUnit	KEYWORD2
+setTempMultiplier	KEYWORD2
 setHystC	KEYWORD2
 setHystC16	KEYWORD2
 setLimitC	KEYWORD2
@@ -86,6 +88,10 @@ RES_11	LITERAL1
 RES_12	LITERAL1
 CONT	LITERAL1
 SINGLE	LITERAL1
+CELSIUS	LITERAL1
+FAHRENHEIT	LITERAL1
+NONE	LITERAL1
+TIMES_16	LITERAL1
 
 #######################################
 # Built-In Variables (LITERAL2)
@@ -97,3 +103,5 @@ alert_mode_t	LITERAL2
 fault_queue_t	LITERAL2
 resolution_t	LITERAL2
 con_mode_t	LITERAL2
+temp_unit_t	LITERAL2
+temp_multi_t	LITERAL2

@@ -27,9 +27,10 @@
  *==============================================================================================================*/
 
 MCP9802::MCP9802(int devAddr) {
-    _devAddr      = devAddr;
-    _singleConfig = 0;
-    _tempUnit     = CELSIUS;
+    _devAddr        = devAddr;
+    _singleConfig   = 0;
+    _tempUnit       = CELSIUS;
+    _tempMultiplier = NONE;
 }
 
 /*==============================================================================================================*
@@ -61,6 +62,22 @@ byte MCP9802::getTempUnit() {
 
 void MCP9802::setTempUnit(temp_unit_t newTempUnit) {          // (PARAMS: CELSIUS / FAHRENHEIT)
     _tempUnit = newTempUnit;
+}
+
+/*==============================================================================================================*
+    GET TEMPERATURE MULTIPLIER (0 = NONE / 1 = TIMES_16)
+ *==============================================================================================================*/
+
+byte MCP9802::getTempMultiplier() {
+    return _tempMultiplier;
+}
+
+/*==============================================================================================================*
+    SET TEMPERATURE UNIT
+ *==============================================================================================================*/
+
+void MCP9802::setTempMultiplier(temp_multi_t newTempMultiplier) {          // (PARAMS: CELSIUS / FAHRENHEIT)
+    _tempMultiplier = newTempMultiplier;
 }
 
 /*==============================================================================================================*

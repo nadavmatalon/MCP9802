@@ -170,6 +170,10 @@ typedef enum:byte {
     FAHRENHEIT = 1
 } temp_unit_t;
 
+typedef enum:byte {
+    NONE     = 0,
+    TIMES_16 = 1
+} temp_multi_t;
 
 class MCP9802 {
      public:
@@ -194,12 +198,14 @@ class MCP9802 {
         byte   getResolution();
         byte   getConMode();
         byte   getTempUnit();
+        byte   getTempMultiplier();
         void   setAlertType(alert_type_t alertType);
         void   setAlertMode(alert_mode_t alertMode);
         void   setFaultQueue(fault_queue_t fqVal);
         void   setResolution(resolution_t resVal);
         void   setConMode(con_mode_t conMode);
         void   setTempUnit(temp_unit_t newTempUnit);
+        void   setTempMultiplier(temp_multi_t newTempMultiplier);
 
     
     
@@ -230,6 +236,7 @@ class MCP9802 {
     private:
         int    _devAddr;
         byte   _tempUnit;
+        byte   _tempMultiplier;
         byte   _comBuffer;
         byte   _singleConfig;
         void   initCall(byte dataByte);
