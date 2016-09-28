@@ -60,7 +60,7 @@
   PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 #include "MCP9802.h"
-#include "MCP9802InfoStr.h"
+#include "utility/MCP9802InfoStr.h"
 
 const int MCP9802_ADDR = 0x48;                   // I2C address of the MCP9802 (Change as needed)
 
