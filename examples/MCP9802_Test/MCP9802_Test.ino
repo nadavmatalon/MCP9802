@@ -1,11 +1,14 @@
 /* 
   MCP9802 LIBRARY - BASIC DEVICE TESTING EXAMPLE
   ----------------------------------------------
-
+  
+  INTRODUCTION
+  ------------
   This sketch offers a quick & simple code for testing that the MCP9802 is hooked-up and operating correctly.
 
-  The sketch begins by searching for the MCP9802 on the I2C Bus, then gets all available data from the device and displays it in the Serial Monitor,
-  and finally, it verifies that the Alert functionality is working as it should.
+  The sketch begins by searching for the MCP9802 on the I2C Bus. I then moves on to get the various Register data available from the device 
+  (Ambient Temperature, Limit, and Hysteresis). And finally, it verifies that the Alert functionality is working as it should (at least, 
+  in default mode).
   
   INPORTANT: This library uses the 'WSWire' library (https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire) for I2C communication with 
   the ADS1110, so it is NECESSARY to have it installed prior to using the current libraty. Alternatively, if you wish to use the 'Wire' library 
@@ -34,7 +37,6 @@
    PIN 5 -    Conntect SDA to the Arduino's PIN A4 with a 2K2 pull-up resistor
    DECOUPING: Connect a 0.1uF Ceramic Capacitor between the MCP9802's VCC & GND PINS
 
- 
   I2C ADDRESSES
   -------------
   Each MCP9802 has 1 of 8 possible I2C addresses (factory hardwired & recognized by its specific part number & top marking 
@@ -67,7 +69,7 @@
 #include <MCP9802.h>
 
 const int  MCP9802_ADDR = 0x48;                   // DEC: 72 - I2C address of the MCP9802 (Change as needed)
-const byte PIN_D2 = 2;                            // Arduino PIN D2 (PIN 2) connected to the MCP9802's ALERT Pin
+const byte PIN_D2 = 2;                            // Arduino Digital Pin PIN 2 (connected to the MCP9802's ALERT Pin)
 float temp, limit, hyst;                          // Containers for register data
 
 typedef enum:byte {
@@ -93,14 +95,13 @@ void setup() {
     quickDelay();
     Serial.print(F("\nINITIALIZING TESTS\n"));
     runTests();
-    MCP9802.reset();
 }
   
 void loop() {}
 
 void runTests() {
     testPingDevice();
-    testDevInfoStr();
+    testGetConditions();
     testAlert();
 }
 
@@ -109,27 +110,6 @@ void testPingDevice() {
     MCP9802.ping() ? Serial.print(F("Not Found\n")) : Serial.print(F("Found!\n"));
     printDivider(); 
     quickDelay();
-}
-
-void testDevInfoStr() {
-     Serial.print(F("\nGenerating Device Info String:\n"));
-     Serial.print(MCP9802.deviceInfoStr());
-     printDivider(); 
-}
-
-void testAlert() {
-     Serial.print(F("\nTESTING ALERT FUNCTIONALITY\n"));
-     Serial.print(F("\nInitial Conditions:\n"));
-     testGetConditions();
-     testAlertState(OFF);
-     Serial.print(F("\nSimulating Alert Conditions..."));
-     MCP9802.setLimitC(temp - 10);
-     MCP9802.setHystC(temp - 20);
-     Serial.print(F("DONE\n"));
-     Serial.print(F("\nCurrent Conditions:\n"));
-     testGetConditions();
-     testAlertState(ON); 
-     printDivider(); 
 }
 
 void testGetConditions() {
@@ -166,6 +146,21 @@ void testGetAlertMode() {
      Serial.print(F("\nALERT MODE:\t\tACTIVE-"));
      Serial.print(MCP9802.getAlertMode() ? "HIGH\n" : "LOW\n");
      quickDelay();
+     printDivider(); 
+}
+
+void testAlert() {
+     Serial.print(F("\nTESTING ALERT FUNCTIONALITY\n"));
+     testAlertState(OFF);
+     printDivider(); 
+     Serial.print(F("\nSimulating Alert Conditions..."));
+     MCP9802.setLimitC(temp - 10);
+     MCP9802.setHystC(temp - 20);
+     Serial.print(F("DONE\n"));
+     Serial.print(F("\nCurrent Conditions:\n"));
+     testGetConditions();
+     testAlertState(ON); 
+     printDivider(); 
 }
 
 void testSetAlertMode() {
@@ -184,7 +179,7 @@ void testAlertState(alert_state_t alertState) {
 }
 
 void printDivider() {
-    Serial.print(F("\n--------------------------------\n"));
+    Serial.print(F("\n-----------------------------------------\n"));
 }
 
 void quickDelay() {
