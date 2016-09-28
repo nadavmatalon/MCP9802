@@ -36,11 +36,13 @@ getAlertMode	KEYWORD2
 getFaultQueue	KEYWORD2
 getResolution	KEYWORD2
 getConMode	KEYWORD2
+getTempUnit	KEYWORD2
 setAlertType	KEYWORD2
 setAlertMode	KEYWORD2
 setFaultQueue	KEYWORD2
 setResolution	KEYWORD2
 setConMode	KEYWORD2
+setTempUnit	KEYWORD2
 setHystC	KEYWORD2
 setHystC16	KEYWORD2
 setLimitC	KEYWORD2

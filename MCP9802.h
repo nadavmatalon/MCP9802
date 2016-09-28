@@ -165,6 +165,12 @@ typedef enum:byte {
     SINGLE = 128
 } con_mode_t;
 
+typedef enum:byte {
+    CELSIUS    = 0,
+    FAHRENHEIT = 1
+} temp_unit_t;
+
+
 class MCP9802 {
      public:
         MCP9802(int devAddr);
@@ -187,6 +193,16 @@ class MCP9802 {
         byte   getFaultQueue();
         byte   getResolution();
         byte   getConMode();
+        byte   getTempUnit();
+        void   setAlertType(alert_type_t alertType);
+        void   setAlertMode(alert_mode_t alertMode);
+        void   setFaultQueue(fault_queue_t fqVal);
+        void   setResolution(resolution_t resVal);
+        void   setConMode(con_mode_t conMode);
+        void   setTempUnit(temp_unit_t newTempUnit);
+
+    
+    
         void   setHystC(int newHystC);
         void   setHystC(float newHystC);
         void   setHystC(double newHystC);
@@ -203,19 +219,17 @@ class MCP9802 {
         void   setLimitF16(int newLimitF16);
         void   setLimitF(float newLimitF);
         void   setLimitF(double newLimitF);
-        void   setAlertType(alert_type_t alertType);
-        void   setAlertMode(alert_mode_t alertMode);
-        void   setFaultQueue(fault_queue_t fqVal);
-        void   setResolution(resolution_t resVal);
-        void   setConMode(con_mode_t conMode);
-        void   reset();
+
         int    singleConC16();
         float  singleConC();
         int    singleConF16();
         float  singleConF();
+
+        void   reset();
         byte   getComResult();
     private:
         int    _devAddr;
+        byte   _tempUnit;
         byte   _comBuffer;
         byte   _singleConfig;
         void   initCall(byte dataByte);
