@@ -25,18 +25,28 @@
 
 #include <avr/pgmspace.h>
 
+const int INFO_BUFFER_SIZE  = 264;
+const byte NUM_OF_INFO_CODES =  1;
+
 const char devInfoStrBase[] PROGMEM = "\nMCP9802 DEVICE INFORMATION\n--------------------------\nI2C ADDRESS:\t %d (%#X)\nCONFIG BYTE:\t B%d%d%d%d%d%d%d%d \nALERT TYPE:\t %s\nALERT MODE:\t ACTIVE-%s\nFAULT-QUEUE:\t %d FAULT%s\nRESOLUTION:\t %d-BIT\nCONVERSION MODE: %s\nHYSTERESIS:\t %d.%dC\nLIMIT:\t\t %d.%dC\n\0";
 
+const char * const infoCodes[NUM_OF_INFO_CODES] PROGMEM = { devInfoStrBase };
+
+/*==============================================================================================================*
+    GET DEVICE INFORMATION (PRINTABLE FORMAT)
+ *==============================================================================================================*/
+
 String MCP9802InfoStr(const MCP9802& devParams) {
-    char devInfoBuffer[264];
+    char devInfoBuffer[INFO_BUFFER_SIZE];
     int devAddr  = devParams._devAddr;
+    char * ptr = (char *) pgm_read_word(&infoCodes[0]);
     MCP9802 mcp9802(devAddr);
     byte config  = devParams._singleConfig ? devParams._singleConfig : mcp9802.getConfig();
     byte fqVal   = (config & 0x18) >> 2;
     float hystC  = mcp9802.getHystC();
     float limitC = mcp9802.getLimitC();
-    snprintf_P(devInfoBuffer, 264, devInfoStrBase, devAddr, devAddr, (config >> 7)&1, (config >> 6)&1,
-       (config >> 5)&1, (config >> 4)&1, (config >> 3)&1, (config >> 2)&1, (config >> 1)&1,
+    snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, devAddr, devAddr, (config >> 7)&1,
+       (config >> 6)&1, (config >> 5)&1, (config >> 4)&1, (config >> 3)&1, (config >> 2)&1, (config >> 1)&1,
        config&1, ((config >> 1)&1 ? "INTERRUPT": "COMPARATOR"), ((config >> 2)&1 ? "HIGH": "LOW"),
        (fqVal ? fqVal : 1), (fqVal ? "S" : ""), (((config & 0x60) >> 5) + 9),
        (config ? "SINGLE-SHOT" : "CONTINUOUS"), (int)hystC, ((int)(hystC * 10) % 10 ? 5 : 0),
@@ -45,4 +55,3 @@ String MCP9802InfoStr(const MCP9802& devParams) {
 }
 
 #endif
-

@@ -59,6 +59,7 @@ singleConF	KEYWORD2
 singleConC16	KEYWORD2
 singleConF16	KEYWORD2
 getComResult	KEYWORD2
+MCP9802ComStr	KEYWORD2
 MCP9802InfoStr	KEYWORD2
 
 #######################################

@@ -546,3 +546,5 @@ int MCP9802::singleConF16() {
 float MCP9802::singleConF() {
     return (singleConF16() / 16.0);
 }
+
+

@@ -1,6 +1,6 @@
 /* 
   MCP9802 LIBRARY - COMPLETE USAGE EXAMPLE
-  --------------------------------------
+  ----------------------------------------
 
   INTRODUCTION
   ------------ 
@@ -155,29 +155,29 @@ void runTests() {
     Serial.print(F("\nGETTING CONFIGURATION\n"));
     testGetConfigData();
     printDivider();
-    Serial.print(F("\nGETTING REGISTERS DATA (TEMPERATURE / HYSTERESIS / LIMIT)\n"));
-    testGetRegData();
-    printDivider();
+//    Serial.print(F("\nGETTING REGISTERS DATA (TEMPERATURE / HYSTERESIS / LIMIT)\n"));
+//    testGetRegData();
+//    printDivider();
     Serial.print(F("\nSETTING CONFIGURATION\n"));
     testSetConfigData();
     printDivider();
-    Serial.print(F("\nSETTING REGISTERS (HYSTERESIS / LIMIT)\n"));
-    testSetRegData();
-    printDivider();
-    Serial.print(F("\nGETTING SINGLE-SHOT CONVERSION\n"));
-    testSingleConversion();
-    printDivider();
-    Serial.print(F("\nTESTING ALERT FUNCTIONALITY\n"));
-    testAlertFunctionality();
-    printDivider();
-    Serial.print(F("\nTESTING DEVICE RESET\n"));
-    testReset();
-    printDivider();
+//    Serial.print(F("\nSETTING REGISTERS (HYSTERESIS / LIMIT)\n"));
+//    testSetRegData();
+//    printDivider();
+//    Serial.print(F("\nGETTING SINGLE-SHOT CONVERSION\n"));
+//    testSingleConversion();
+//    printDivider();
+//    Serial.print(F("\nTESTING ALERT FUNCTIONALITY\n"));
+//    testAlertFunctionality();
+//    printDivider();
+//    Serial.print(F("\nTESTING DEVICE RESET\n"));
+//    testReset();
+//    printDivider();
 }
 
 void testPingDevice() {
     Serial.print(F("\nSearching for device...Device "));
-    MCP9802.ping() ? Serial.print(F("Not Found\n")) : Serial.print(F("Found!\n"));
+    Serial.print(MCP9802.ping() ? "Not Found\n" : "Found!\n");
     quickDelay();
 }
 
@@ -187,29 +187,27 @@ void testGetConfigData() {
     testGetFaultQueue();
     testGetResolution();
     testGetConMode();
+    testGetTempUnit();
+    testGetTempMultiplier();
 }
 
 void testGetAlertType() {
-    alertType = (MCP9802.getAlertType() ? "INTERRUPT" : "COMPARATOR");
     Serial.print(F("\nALERT TYPE:\t\t"));
-    Serial.print(alertType);
-    Serial.print(F("\n"));
+    Serial.print(MCP9802.getAlertType() ? "INTERRUPT\n" : "COMPARATOR\n");
     quickDelay();
 }
 
 void testGetAlertMode() {
-    alertMode = (MCP9802.getAlertMode() ? "ACTIVE-HIGH" : "ACTIVE-LOW");
     Serial.print(F("\nALERT MODE:\t\t"));
-    Serial.print(alertMode);
-    Serial.print(F("\n"));
+    Serial.print(MCP9802.getAlertMode() ? "ACTIVE-HIGH\n" : "ACTIVE-LOW\n");
     quickDelay();
 }
 
 void testGetFaultQueue() {
-    Serial.print(F("\nFAULT QUEUE:\t\t"));
     byte fqVal = MCP9802.getFaultQueue();
+    Serial.print("\nFAULT QUEUE:\t\t");
     Serial.print(fqVal);
-    (fqVal == 1) ? Serial.print(F(" FAULT\n")) : Serial.print(F(" FAULTS\n")) ; 
+    Serial.print(fqVal == 1 ? " FAULT\n" : " FAULTS\n");
     quickDelay();
 }
 
@@ -221,11 +219,19 @@ void testGetResolution() {
 }
 
 void testGetConMode() {
-    conMode = (MCP9802.getConMode() ? "SINGLE-SHOT" : "CONTINUOUS");
     Serial.print(F("\nCONVERSION MODE:\t"));
-    Serial.print(conMode);
-    Serial.print(F("\n"));
+    Serial.print(MCP9802.getConMode() ? "SINGLE-SHOT\n" : "CONTINUOUS\n");
     quickDelay();
+}
+
+void testGetTempUnit() {
+    Serial.print(F("\nTEMPERATURE UNIT:\t"));
+    Serial.print(MCP9802.getTempUnit() ? "FAHRENHEIT\n" : "CELSIUS\n");
+}
+
+void testGetTempMultiplier() {
+    Serial.print(F("\nTEMPERATURE MULTIPLIER:\t"));
+    Serial.print(MCP9802.getTempMultiplier() ? "TIMES_16\n" : "NONE\n");
 }
 
 void testGetRegData() {
@@ -350,6 +356,8 @@ void testSetConfigData() {
     testSetFaultQueue();
     testSetResolution();
     testSetConMode();
+    testSetTempUnit();
+    testSetTempMultiplier();
 }
 
 void testSetAlertType() {
@@ -410,6 +418,30 @@ void testSetConMode() {
         MCP9802.setConMode(conModeParams[i]);
         Serial.print(F("...DONE\n"));
         testGetConMode();
+        quickDelay();
+    }
+}
+
+void testSetTempUnit() {
+    temp_unit_t tempUnitParams[2] = { FAHRENHEIT, CELSIUS };
+    for (byte i=0; i<2; i++) {
+        Serial.print(F("\nSetting Temperature Unit to: "));
+        i ? Serial.print("CELSIUS") : Serial.print("FAHRENHEIT");
+        MCP9802.setTempUnit(tempUnitParams[i]);  
+        Serial.print(F("...DONE\n"));
+        testGetTempUnit();
+        quickDelay();
+    }
+}
+
+void testSetTempMultiplier() {
+    temp_multi_t tempMultiParams[2] = { TIMES_16, NONE };
+    for (byte i=0; i<2; i++) {
+        Serial.print(F("\nSetting Temperature Multiplier to: "));
+        i ? Serial.print("NONE") : Serial.print("TIMES_16");
+        MCP9802.setTempMultiplier(tempMultiParams[i]);  
+        Serial.print(F("...DONE\n"));
+        testGetTempMultiplier();
         quickDelay();
     }
 }

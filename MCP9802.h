@@ -245,6 +245,7 @@ class MCP9802 {
         int    getData(reg_ptr_t ptr);
         void   setConfig(byte newConfig);
         void   setData(reg_ptr_t ptr, int newData);
+        friend String MCP9802ComStr(const MCP9802&);
         friend String MCP9802InfoStr(const MCP9802&);
 };
 

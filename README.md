@@ -338,8 +338,14 @@ Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getComResult();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;Returns the latest I2C Communication result (see Success/Error codes above)  
+Description:&nbsp;&nbsp;Returns the latest I2C Communication result code (see Success/Error codes above)  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+
+__getComMsg();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;Returns the latest I2C Communication result in a human-friendly String format 
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
+
 
 __Destructor__  
 If, for whatever reason, you wish to destruct an existing MCP9802 object, you can use the following line to do so:
