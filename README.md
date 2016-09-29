@@ -357,7 +357,12 @@ If, for whatever reason, you wish to destruct an existing MCP9802 object, you ca
 
 ###Extended Functionality*
 
-(* requires including the 'MCP9802InfoStr_h' file at the top of the sketch)
+(* requires an additional 'include' of the relevant *.h file as shown in the corresponding example sketches)
+
+__MCP9802ComStr();__  
+Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
+Description:&nbsp;&nbsp;Returns printable string containing human-friendly information about the device's latest I2C communication result
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
 
 __MCP9802InfoStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
