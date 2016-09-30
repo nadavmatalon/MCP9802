@@ -179,13 +179,6 @@ class MCP9802 {
         byte   getResolution();
         byte   getConMode();
         byte   getTempUnit();
-        void   setAlertType(alert_type_t alertType);
-        void   setAlertMode(alert_mode_t alertMode);
-        void   setFaultQueue(fault_queue_t fqVal);
-        void   setResolution(resolution_t resVal);
-        void   setConMode(con_mode_t conMode);
-        void   setTempUnit(temp_unit_t newTempUnit);
-        void   reset();
         byte   getComResult();
         float  getTemp();
         int    getTemp16();
@@ -193,14 +186,21 @@ class MCP9802 {
         int    getHyst16();
         float  getLimit();
         int    getLimit16();
+        float  singleCon();
+        int    singleCon16();
+        void   setAlertType(alert_type_t alertType);
+        void   setAlertMode(alert_mode_t alertMode);
+        void   setFaultQueue(fault_queue_t fqVal);
+        void   setResolution(resolution_t resVal);
+        void   setConMode(con_mode_t conMode);
+        void   setTempUnit(temp_unit_t newTempUnit);
 //      void   setHyst(int newHyst);
         void   setHyst(float newHyst);
         void   setHyst16(int newHyst16);
 //      void   setLimit(int newLimit);
         void   setLimit(float newLimit);
         void   setLimit16(int newLimit16);
-        float  singleConC();
-        int    singleCon16();
+        void   reset();
     private:
         int    _devAddr;
         byte   _tempUnit;
