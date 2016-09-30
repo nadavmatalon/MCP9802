@@ -168,6 +168,9 @@ typedef enum:byte {
     FAHRENHEIT = 1
 } temp_unit_t;
 
+// update readme
+// update keywords
+
 class MCP9802 {
      public:
         MCP9802(int devAddr);

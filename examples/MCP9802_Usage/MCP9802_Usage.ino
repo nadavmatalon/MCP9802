@@ -155,24 +155,24 @@ void runTests() {
     Serial.print(F("\nGETTING CONFIGURATION\n"));
     testGetConfigData();
     printDivider();
-//    Serial.print(F("\nGETTING REGISTERS DATA (TEMPERATURE / HYSTERESIS / LIMIT)\n"));
-//    testGetRegData();
-//    printDivider();
+    Serial.print(F("\nGETTING REGISTERS DATA (TEMPERATURE / HYSTERESIS / LIMIT)\n"));
+    testGetRegData();
+    printDivider();
     Serial.print(F("\nSETTING CONFIGURATION\n"));
     testSetConfigData();
     printDivider();
-//    Serial.print(F("\nSETTING REGISTERS (HYSTERESIS / LIMIT)\n"));
-//    testSetRegData();
-//    printDivider();
-//    Serial.print(F("\nGETTING SINGLE-SHOT CONVERSION\n"));
-//    testSingleConversion();
-//    printDivider();
-//    Serial.print(F("\nTESTING ALERT FUNCTIONALITY\n"));
-//    testAlertFunctionality();
-//    printDivider();
-//    Serial.print(F("\nTESTING DEVICE RESET\n"));
-//    testReset();
-//    printDivider();
+    Serial.print(F("\nSETTING REGISTERS (HYSTERESIS / LIMIT)\n"));
+    testSetRegData();
+    printDivider();
+    Serial.print(F("\nGETTING SINGLE-SHOT CONVERSION\n"));
+    testSingleConversion();
+    printDivider();
+    Serial.print(F("\nTESTING ALERT FUNCTIONALITY\n"));
+    testAlertFunctionality();
+    printDivider();
+    Serial.print(F("\nTESTING DEVICE RESET\n"));
+    testReset();
+    printDivider();
 }
 
 void testPingDevice() {
@@ -188,7 +188,6 @@ void testGetConfigData() {
     testGetResolution();
     testGetConMode();
     testGetTempUnit();
-    testGetTempMultiplier();
 }
 
 void testGetAlertType() {
@@ -229,11 +228,6 @@ void testGetTempUnit() {
     Serial.print(MCP9802.getTempUnit() ? "FAHRENHEIT\n" : "CELSIUS\n");
 }
 
-void testGetTempMultiplier() {
-    Serial.print(F("\nTEMPERATURE MULTIPLIER:\t"));
-    Serial.print(MCP9802.getTempMultiplier() ? "TIMES_16\n" : "NONE\n");
-}
-
 void testGetRegData() {
     Serial.print(F("\nGETTING TEMPERATURE READINGS\n"));
     testGetTempReadings();
@@ -248,33 +242,35 @@ void testGetRegData() {
 void testGetTempReadings() {
     testGetTempC16();
     testGetTempC();
+    testSwitchTempUnit();
     testGetTempF16();
     testGetTempF();
+    testSwitchTempUnit();
 }
 
 void testGetTempC16() {
-    tempC16 = MCP9802.getTempC16();
+    tempC16 = MCP9802.getTemp16();
     Serial.print(F("\nTemp (Cx16): \t"));
     Serial.println(tempC16);
     quickDelay();
 }
 
 void testGetTempC() {
-    tempC = MCP9802.getTempC();
+    tempC = MCP9802.getTemp();
     Serial.print(F("\nTemp (C): \t"));
     Serial.println(tempC, 4);
     quickDelay();
 }
 
 void testGetTempF16() {
-    tempF16 = MCP9802.getTempF16();
+    tempF16 = MCP9802.getTemp16();
     Serial.print(F("\nTemp (Fx16): \t"));
     Serial.println(tempF16);
     quickDelay();
 }
 
 void testGetTempF() {
-    tempF = MCP9802.getTempF();
+    tempF = MCP9802.getTemp();
     Serial.print(F("\nTemp (F): \t"));
     Serial.println(tempF, 4);
     quickDelay();
@@ -283,33 +279,35 @@ void testGetTempF() {
 void testGetHystSetting() {
     testGetHystC16();
     testGetHystC();
+    testSwitchTempUnit();
     testGetHystF16();
     testGetHystF();
+    testSwitchTempUnit();
 }
 
 void testGetHystC16() {
-    hystC16 = MCP9802.getHystC16();
+    hystC16 = MCP9802.getHyst16();
     Serial.print(F("\nHyst (Cx16): \t"));
     Serial.println(hystC16);
     quickDelay();
 }
 
 void testGetHystC() {
-    hystC = MCP9802.getHystC();
+    hystC = MCP9802.getHyst();
     Serial.print(F("\nHyst (C): \t"));
     Serial.println(hystC, 1);
     quickDelay();
 }
 
 void testGetHystF16() {
-    hystF16 = MCP9802.getHystF16();
+    hystF16 = MCP9802.getHyst16();
     Serial.print(F("\nHyst (Fx16): \t"));
     Serial.println(hystF16);
     quickDelay();
 }
 
 void testGetHystF() {
-    hystF = MCP9802.getHystF();
+    hystF = MCP9802.getHyst();
     Serial.print(F("\nHyst (F): \t"));
     Serial.println(hystF, 1);
     quickDelay();
@@ -318,33 +316,35 @@ void testGetHystF() {
 void testGetLimitSetting() {
     testGetLimitC16();
     testGetLimitC();
+    testSwitchTempUnit();    
     testGetLimitF16();
     testGetLimitF();
+    testSwitchTempUnit();
 }
 
 void testGetLimitC16() {
-    limitC16 = MCP9802.getLimitC16();
+    limitC16 = MCP9802.getLimit16();
     Serial.print(F("\nLimit (Cx16): \t"));
     Serial.println(limitC16);
     quickDelay();
 }
 
 void testGetLimitC() {
-    limitC = MCP9802.getLimitC();
+    limitC = MCP9802.getLimit();
     Serial.print(F("\nLimit (C): \t"));
     Serial.println(limitC, 1);
     quickDelay();
 }
 
 void testGetLimitF16() {
-    limitF16 = MCP9802.getLimitF16();
+    limitF16 = MCP9802.getLimit16();
     Serial.print(F("\nLimit (Fx16): \t"));
     Serial.println(limitF16);
     quickDelay();
 }
 
 void testGetLimitF() {
-    limitF = MCP9802.getLimitF();
+    limitF = MCP9802.getLimit();
     Serial.print(F("\nLimit (F): \t"));
     Serial.println(limitF, 1);
     quickDelay();
@@ -357,7 +357,6 @@ void testSetConfigData() {
     testSetResolution();
     testSetConMode();
     testSetTempUnit();
-    testSetTempMultiplier();
 }
 
 void testSetAlertType() {
@@ -434,18 +433,6 @@ void testSetTempUnit() {
     }
 }
 
-void testSetTempMultiplier() {
-    temp_multi_t tempMultiParams[2] = { TIMES_16, NONE };
-    for (byte i=0; i<2; i++) {
-        Serial.print(F("\nSetting Temperature Multiplier to: "));
-        i ? Serial.print("NONE") : Serial.print("TIMES_16");
-        MCP9802.setTempMultiplier(tempMultiParams[i]);  
-        Serial.print(F("...DONE\n"));
-        testGetTempMultiplier();
-        quickDelay();
-    }
-}
-
 void testSetRegData() {
    testSettingHyst();
    printDivider();
@@ -455,37 +442,39 @@ void testSetRegData() {
 void testSettingHyst() {
    Serial.print(F("\nSETTING HYSTERESIS (CELSIUS)\n"));
    testSetHystC();
+   testSwitchTempUnit();
    Serial.print(F("\n\nSETTING HYSTERESIS (FAHRENHEIT)\n"));
    testSetHystF();
+   testSwitchTempUnit();
 }
 
 void testSetHystC() { 
-    float hystVal[8] = { 57, -32, 43.5, 21.1, -11.6, 1640, -782, DEFAULT_HYST_C };
+    float hystVal[8] = { 57, -32, 43.5, 21.1, -11.6, 1640, -782, DEFAULT_HYST };
     String valStr = "\nCurrent Hysteresis:\t";
-    valStr += String(MCP9802.getHystC(), 0);
+    valStr += String(MCP9802.getHyst(), 0);
     Serial.print(valStr + "C\n");
     for (byte i=0; i<8; i++) {
         valStr = "\nSetting Hysteresis to:\t";
         if (i < 2) {
             valStr += String((int)hystVal[i]);
-            MCP9802.setHystC(hystVal[i]);
+            MCP9802.setHyst(hystVal[i]);
             valStr += "C...DONE\n\nNew Hysteresis:\t\t";
-            valStr += String((int)MCP9802.getHystC());
+            valStr += String((int)MCP9802.getHyst());
         } else if (i == 5 || i == 6) {
             valStr += String((hystVal[i] / 16.0), 1);
-            MCP9802.setHystC16(hystVal[i]);
+            MCP9802.setHyst16(hystVal[i]);
             valStr += "C...DONE\n\nNew Hysteresis:\t\t";
-            valStr += String(MCP9802.getHystC(), 1);
+            valStr += String(MCP9802.getHyst(), 1);
         } else if (i == 7) {
             valStr += String((int)hystVal[i]);
-            MCP9802.setHystC((int)hystVal[i]);
+            MCP9802.setHyst((int)hystVal[i]);
             valStr += "C...DONE\n\nNew Hysteresis:\t\t";
-            valStr += String((int)MCP9802.getHystC());
+            valStr += String((int)MCP9802.getHyst());
         } else {
             valStr += String(hystVal[i], 1);
-            MCP9802.setHystC(hystVal[i]);
+            MCP9802.setHyst(hystVal[i]);
             valStr += "C...DONE\n\nNew Hysteresis:\t\t";
-            valStr += String(MCP9802.getHystC(), 1);
+            valStr += String(MCP9802.getHyst(), 1);
         }
         Serial.print(valStr + "C\n");
         quickDelay();
@@ -493,22 +482,22 @@ void testSetHystC() {
 }
 
 void testSetHystF() {
-    float hystVal[8] = { 134, -66, 110.3, 70.7, -54.9, 1043, -491, DEFAULT_HYST_F };
+    float hystVal[8] = { 134, -66, 110.3, 70.7, -54.9, 1043, -491, DEFAULT_HYST };
     String valStr = "\nCurrent Hysteresis:\t";
-    valStr += String(MCP9802.getHystF(), 0);
+    valStr += String(MCP9802.getHyst(), 0);
     Serial.print(valStr + "F\n");
    for (byte i=0; i<8; i++) {
         valStr = "\nSetting Hysteresis to:\t";
         if (i == 5 || i == 6) {
             valStr += String((hystVal[i] / 16.0), 1);
-            MCP9802.setHystF16(hystVal[i]);
+            MCP9802.setHyst16(hystVal[i]);
             valStr += "F...DONE\n\nNew Hysteresis:\t\t";
-            valStr += String(MCP9802.getHystF(), 1);
+            valStr += String(MCP9802.getHyst(), 1);
         } else {
            valStr += String(hystVal[i], 1);
-            MCP9802.setHystF(hystVal[i]);
+            MCP9802.setHyst(hystVal[i]);
             valStr += "F...DONE\n\nNew Hysteresis:\t\t";
-            valStr += String(MCP9802.getHystF(), 1);
+            valStr += String(MCP9802.getHyst(), 1);
         }
         Serial.print(valStr + "F\n");
         quickDelay(); 
@@ -516,39 +505,41 @@ void testSetHystF() {
 }
 
 void testSettingLimit() {
-   Serial.print(F("\nSETTING LIMIT (CELSIUS)\n"));
-   testSetLimitC();
-   Serial.print(F("\n\nSETTING LIMIT (FAHRENHEIT)\n"));
-   testSetLimitF();
+    Serial.print(F("\nSETTING LIMIT (CELSIUS)\n"));
+    testSetLimitC();
+    testSwitchTempUnit();   
+    Serial.print(F("\n\nSETTING LIMIT (FAHRENHEIT)\n"));
+    testSetLimitF();
+    testSwitchTempUnit();    
 }
 
 void testSetLimitC() {
-    float limitVal[8] = { 64, -16, 35.5, 17.8, -24.5, 1510, -631, DEFAULT_LIMIT_C };
+    float limitVal[8] = { 64, -16, 35.5, 17.8, -24.5, 1510, -631, DEFAULT_LIMIT };
     String valStr = "\nCurrent Limit:\t\t";
-    valStr += String(MCP9802.getLimitC(), 0);
+    valStr += String(MCP9802.getLimit(), 0);
     Serial.print(valStr + "C\n");
     for (byte i=0; i<8; i++) {
         valStr = "\nSetting Limit to:\t";
         if (i < 2) {
             valStr += String((int)limitVal[i]);
-            MCP9802.setLimitC(limitVal[i]);
+            MCP9802.setLimit(limitVal[i]);
             valStr += "C...DONE\n\nNew Limit:\t\t";
-            valStr += String((int)MCP9802.getLimitC());
+            valStr += String((int)MCP9802.getLimit());
         } else if (i == 5 || i == 6) {
             valStr += String((limitVal[i] / 16.0), 1);
-            MCP9802.setLimitC16(limitVal[i]);
+            MCP9802.setLimit16(limitVal[i]);
             valStr += "C...DONE\n\nNew Limit:\t\t";
-            valStr += String(MCP9802.getLimitC(), 1);
+            valStr += String(MCP9802.getLimit(), 1);
         } else if (i == 7) {
             valStr += String((int)limitVal[i]);
-            MCP9802.setLimitC((int)limitVal[i]);
+            MCP9802.setLimit((int)limitVal[i]);
             valStr += "C...DONE\n\nNew Limit:\t\t";
-            valStr += String((int)MCP9802.getLimitC());
+            valStr += String((int)MCP9802.getLimit());
         } else {
             valStr += String(limitVal[i], 1);
-            MCP9802.setLimitC(limitVal[i]);
+            MCP9802.setLimit(limitVal[i]);
             valStr += "C...DONE\n\nNew Limit:\t\t";
-            valStr += String(MCP9802.getLimitC(), 1);
+            valStr += String(MCP9802.getLimit(), 1);
         }
         Serial.print(valStr + "C\n");
         quickDelay();
@@ -556,22 +547,22 @@ void testSetLimitC() {
 }
 
 void testSetLimitF() {
-    float limitVal[8] = { 255, -12, 213.5, 167.2, -24.7, 1872, -966, DEFAULT_LIMIT_F };
+    float limitVal[8] = { 255, -12, 213.5, 167.2, -24.7, 1872, -966, DEFAULT_LIMIT };
     String valStr = "\nCurrent Limit:\t\t";
-    valStr += String(MCP9802.getLimitF(), 0);
+    valStr += String(MCP9802.getLimit(), 0);
     Serial.print(valStr + "F\n");
     for (byte i=0; i<8; i++) {
         valStr = "\nSetting Limit to:\t";
         if (i == 5 || i == 6) {
             valStr += String((limitVal[i] / 16.0), 1);
-            MCP9802.setLimitF16(limitVal[i]);
+            MCP9802.setLimit16(limitVal[i]);
             valStr += "F...DONE\n\nNew Limit:\t\t";
-            valStr += String(MCP9802.getLimitF(), 1);
+            valStr += String(MCP9802.getLimit(), 1);
         } else {
             valStr += String(limitVal[i], 1);
-            MCP9802.setLimitF(limitVal[i]);
+            MCP9802.setLimit(limitVal[i]);
             valStr += "F...DONE\n\nNew Limit:\t\t";
-            valStr += String(MCP9802.getLimitF(), 1);
+            valStr += String(MCP9802.getLimit(), 1);
         }
         Serial.print(valStr + "F\n");
         quickDelay();
@@ -581,39 +572,39 @@ void testSetLimitF() {
 void testSingleConversion() {
     Serial.print(F("\nChanging Conversion Mode to SINGLE-SHOT..."));
     MCP9802.setConMode(SINGLE);
-    quickDelay();
     Serial.print(F("DONE\n"));
     testGetSingleConC16();
-    testGetSingleConC();
+    testGetSingleConC();  
+    testSwitchTempUnit();
     testGetSingleConF16();
-    testGetSingleConF();
-    MCP9802.reset();
+    testGetSingleConF();       
+    testSwitchTempUnit();    
     quickDelay();
 }
 
 void testGetSingleConC16() {
-    tempC16 = MCP9802.singleConC16();
+    tempC16 = MCP9802.singleCon16();
     Serial.print(F("\nTemp (Cx16): \t"));
     Serial.println(tempC16);
     quickDelay();  
 }
 
 void testGetSingleConC() {
-    tempC = MCP9802.getTempC();
+    tempC = MCP9802.getTemp();
     Serial.print(F("\nTemp (C): \t"));
     Serial.println(tempC, 4);
     quickDelay();
 }
 
 void testGetSingleConF16() {
-    tempF16 = MCP9802.getTempF16();
+    tempF16 = MCP9802.getTemp16();
     Serial.print(F("\nTemp (Fx16): \t"));
     Serial.println(tempF16);
     quickDelay();
 }
 
 void testGetSingleConF() {
-    tempF = MCP9802.getTempF();
+    tempF = MCP9802.getTemp();
     Serial.print(F("\nTemp (F): \t"));
     Serial.println(tempF, 4);
     quickDelay();
@@ -629,6 +620,7 @@ void testAlertFunctionality() {
          testGetConditions();
          testGetAlertType();
          testGetAlertMode();
+         testGetTempUnit();
          testAlertState(alertModeParams[i], OFF);
          testSimulateTestConditions();
          testGetConditions();
@@ -640,8 +632,8 @@ void testAlertFunctionality() {
          testAlertState(alertModeParams[i], ON);
          Serial.print(F("\nSimulating Return to Normal Conditions..."));
          MCP9802.setConMode(CONT);
-         MCP9802.setLimitC(tempC + 20);
-         MCP9802.setHystC(tempC + 10);
+         MCP9802.setLimit(tempC + 20);
+         MCP9802.setHyst(tempC + 10);
          Serial.print(F("DONE\n"));
          testAlertState(alertModeParams[i], OFF);
          if (!i) printDivider();
@@ -666,8 +658,8 @@ void testAlertState(alert_mode_t alertMode, alert_state_t alertState) {
 
 void testSimulateTestConditions() {
      Serial.print(F("\nSimulating Alert Conditions..."));
-     MCP9802.setLimitC(tempC - 10);
-     MCP9802.setHystC(tempC - 20);
+     MCP9802.setLimit(tempC - 10);
+     MCP9802.setHyst(tempC - 20);
      Serial.print(F("DONE\n"));
 }
 
@@ -680,8 +672,9 @@ void testReset() {
     MCP9802.setFaultQueue(FQ4);
     MCP9802.setResolution(RES_11);
     MCP9802.setConMode(SINGLE);
-    MCP9802.setLimitC(52.5);
-    MCP9802.setHystC(49.5);   
+    MCP9802.setTempUnit(FAHRENHEIT);
+    MCP9802.setLimit(52.5);
+    MCP9802.setHyst(49.5);   
     Serial.print(F("DONE\n\nCurrent Settings:\n"));
     testGetConfigData();
     Serial.print(F("\nResetting Device to Default Settings..."));
@@ -696,5 +689,9 @@ void printDivider() {
 
 void quickDelay() {
     delay(50);
+}
+
+void testSwitchTempUnit() {
+    MCP9802.setTempUnit((MCP9802.getTempUnit() == CELSIUS) ? FAHRENHEIT : CELSIUS);
 }
 
