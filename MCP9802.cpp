@@ -27,12 +27,10 @@
  *==============================================================================================================*/
 
 MCP9802::MCP9802(int devAddr) {
-    _devAddr        = devAddr;
-    _singleConfig   = DEFAULT_CONFIG;
+    _devAddr        = devAddr;              // add default address for constructor
     _tempUnit       = CELSIUS;
+    _singleConfig   = DEFAULT_CONFIG;
 }
-
-// add default address for constructor
 
 /*==============================================================================================================*
     DESTRUCTOR
@@ -112,32 +110,23 @@ byte MCP9802::getComResult() {
  *==============================================================================================================*/
 
 float MCP9802::getTemp() {
-    return (getData16(TEMP) / 16.0);
+    return getData(TEMP);
 }
 
 /*==============================================================================================================*
-    GET AMBIENT TEMPERATURE x 16
- *==============================================================================================================*/
-
-int MCP9802::getTemp16() {
-    return getData16(TEMP);
-}
-
-/*==============================================================================================================*
-    GET HYSTERESIS
+    GET HYSTERESIS REGISTER VALUE
  *==============================================================================================================*/
 
 float MCP9802::getHyst() {
-    return (getData16(HYST) / 16.0);
+    return getData(HYST);
 }
 
-
 /*==============================================================================================================*
-    GET LIMIT
+    GET LIMIT REGISTER VALUE
  *==============================================================================================================*/
 
 float MCP9802::getLimit() {
-    return (getData16(LIMIT) / 16.0);
+    return getData(LIMIT);
 }
 
 /*==============================================================================================================*
@@ -217,7 +206,15 @@ void MCP9802::setTempUnit(temp_unit_t newTempUnit) {          // (PARAMS: CELSIU
 }
 
 /*==============================================================================================================*
-    SET LIMIT
+    SET HYSTERESIS REGISTER VALUE (-55°C - 125°C / -67°F - 257°F)
+ *==============================================================================================================*/
+
+void MCP9802::setHyst(float newHyst) {
+    setData(HYST, newHyst);
+}
+
+/*==============================================================================================================*
+    SET LIMIT REGISTER VALUE (-55°C - 125°C / -67°F - 257°F)
  *==============================================================================================================*/
 
 void MCP9802::setLimit(float newLimit) {
@@ -225,33 +222,26 @@ void MCP9802::setLimit(float newLimit) {
 }
 
 /*==============================================================================================================*
- SET LIMIT x 16
- *==============================================================================================================*/
-
-void MCP9802::setLimit16(int newLimit16) {
-    setData(LIMIT, (newLimit16 / 16));
-}
-
-/*==============================================================================================================*
     RESET
  *==============================================================================================================*/
 
 void MCP9802::reset() {
-    _singleConfig = 0;
+    _singleConfig = CONT;
     _tempUnit = CELSIUS;
     setConMode(SINGLE);                 // check if needed
     setConfig(DEFAULT_CONFIG);
-    setLimit16(DEFAULT_LIMIT * 16);
-    setHyst16(DEFAULT_HYST * 16);
+    setTempUnit(CELSIUS);
+    setHyst(DEFAULT_HYST);
+    setLimit(DEFAULT_LIMIT);
 }
 
 /*==============================================================================================================*
     INITIATE I2C COMMUNICATION
  *==============================================================================================================*/
 
-void MCP9802::initCall(byte ptrByte) {
+void MCP9802::initCall(byte ptr) {
     Wire.beginTransmission(_devAddr);
-    Wire.write(ptrByte);
+    Wire.write(ptr);
 }
 
 /*==============================================================================================================*
@@ -263,7 +253,7 @@ void MCP9802::endCall() {
 }
 
 /*==============================================================================================================*
-    GET DEVICE CONFIGURATION REGISTER
+    GET CONFIGURATION REGISTER
  *==============================================================================================================*/
 
 byte MCP9802::getConfig() {
@@ -278,21 +268,19 @@ byte MCP9802::getConfig() {
 }
 
 /*==============================================================================================================*
-    GET DATA REGISTERS
+    GET DATA REGISTERS VALUE (TEMPERATURE / HYSTERESIS / LIMIT)
  *==============================================================================================================*/
 
-int MCP9802::getData16(reg_ptr_t ptr) {                                    // PARAMS: TEMP / HYST / LIMIT
-    int data16;
+float MCP9802::getData(reg_ptr_t ptr) {                                          // PARAMS: TEMP / HYST / LIMIT
+    float data = 0;
     initCall(ptr);
     endCall();
     if (_comBuffer == COM_SUCCESS) {
         Wire.requestFrom(_devAddr, DATA_BYTES);
-        if (Wire.available() == DATA_BYTES) data16 = (Wire.read() << 8) | (Wire.read());
+        if (Wire.available() == DATA_BYTES) data = (((Wire.read() << 8) | (Wire.read())) / 256.0);
     }
-    return (_tempUnit) ? (DegreeConverter::conC16toF16(data16) / 16) : (data16 / 16);
+    return _tempUnit ? convertCtoF(data) : data;
 }
-
-// check replacing last two lines with (Wire.read() << 4 | Wire.read() >> 4)
 
 /*==============================================================================================================*
     SET CONFIGURATION REGISTER
@@ -305,63 +293,42 @@ void MCP9802::setConfig(byte newConfig) {
 }
 
 /*==============================================================================================================*
-    SET REGISTER DATA
+    SET DATA REGISTERS VALUE (HYSTERESIS / LIMIT)
  *==============================================================================================================*/
 
-void MCP9802::setData(reg_ptr_t ptr, int newData) {                                   // PARAMS: HYST / LIMIT
-    if ((ptr == HYST || ptr == LIMIT) && (newData >= -55 && newData <= 125)) {
-//    if ((ptr == HYST || ptr == LIMIT) && (-55 <= newData && newData <= 125)) {
-        union Data_t { int i; byte b[2]; } data;
-        if (_tempUnit) newData = (int)DegreeConverter::roundC(DegreeConverter::conFtoC(newData));
-        data.i = (newData << 8);
+void MCP9802::setData(reg_ptr_t ptr, float newData) {                                 // PARAMS: HYST / LIMIT
+    union Data_t { int i; byte b[2]; } data16;
+    if (_tempUnit) newData = convertFtoC(newData);
+    if ((ptr == HYST || ptr == LIMIT) && (-55 <= newData && newData <= 125)) {
+        data16.i = (int)(roundToHalfDegC(newData) * 256.0);
         initCall(ptr);
-        for (byte j=2; j>0; j--) Wire.write(data.b[j-1]);
+        for (byte j=2; j>0; j--) Wire.write(data16.b[j-1]);
         endCall();
     }
 }
 
 /*==============================================================================================================*
-    SET HYSTERESIS (I)
+    CONVERT DEGREES CELSIUS TO FAHRENHEIT
  *==============================================================================================================*/
 
-void MCP9802::setHyst(int newHyst) {
-    setData(HYST, newHyst);
+float MCP9802::convertCtoF(float valC) {
+    return (valC * 1.8 + 32);
 }
 
 /*==============================================================================================================*
-    SET HYSTERESIS (II)
+    CONVERT DEGREES FAHRENHEIT TO CELSIUS
  *==============================================================================================================*/
 
-//void MCP9802::setHyst(float newHyst) {
-//    setHyst((int)(DegreeConverter::roundC(newHyst)));
-//}
-
-/*==============================================================================================================*
-    SET HYSTERESIS (III)
- *==============================================================================================================*/
-
-void MCP9802::setHyst(double newHyst) {
-    setHyst((int)(DegreeConverter::roundC(newHyst)));
+float MCP9802::convertFtoC(float valF) {
+    return ((valF - 32) * C_TO_F_CONST);
 }
 
 /*==============================================================================================================*
-    SET HYSTERESIS x 16
+    ROUND TO NEAREST 0.5 DEGREES CELSIUS
  *==============================================================================================================*/
 
-void MCP9802::setHyst16(int newHyst16) {
-    setHyst((float)(newHyst16 / 16.0));
+float MCP9802::roundToHalfDegC(float valC) {
+    if (valC > 0) return (int)((valC * 2.0) + 0.5) / 2.0;
+    else if (valC < 0) return (int)((valC * 2.0) - 0.5) / 2.0;
+    else return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

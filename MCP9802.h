@@ -113,19 +113,19 @@
 #if defined(ARDUINO_ARCH_AVR)
     #include <Arduino.h>
     #include <WSWire.h>
-    #include "utility/DegreeConverter.h"
 #else
     #error “The MCP9802 library only supports AVR processors.”
 #endif
 
-const byte DEFAULT_CONFIG   =   0;      // Configuration Register Default Settings for 'Continuous' conversion mode (0x00)
-const int  DEFAULT_HYST     =  75;      // Hysteresis Register Default Settings in degrees Celsius (0x9600)
-const int  DEFAULT_LIMIT    =  80;      // Limit Register Default Settings in degrees Celsius (0xA000)
-const int  CONFIG_BYTE      =   1;      // Number of Configuration Register Bytes (CONFIG)
-const int  DATA_BYTES       =   2;      // Number of Data Register Bytes (TEMP, HYST, LIMIT)
-const byte INIT_SINGLE_SHOT = 129;      // Initiates a single conversion in 'Single-Shot' mode (0x81)
-const byte MIN_CON_TIME     =  30;      // 30ms - Minimal Conversion Time (for 9-BIT Resolution)
-const byte COM_SUCCESS      =   0;      // I2C Communication Success (No Error)
+const byte  DEFAULT_CONFIG   =   0;          // Configuration Register Default Settings for 'Continuous' conversion mode (0x00)
+const int   DEFAULT_HYST     =  75;          // Hysteresis Register Default Settings in degrees Celsius (0x9600)
+const int   DEFAULT_LIMIT    =  80;          // Limit Register Default Settings in degrees Celsius (0xA000)
+const int   CONFIG_BYTE      =   1;          // Number of Configuration Register Bytes (CONFIG)
+const int   DATA_BYTES       =   2;          // Number of Data Register Bytes (TEMP, HYST, LIMIT)
+const byte  INIT_SINGLE_SHOT = 129;          // Initiates a single conversion in 'Single-Shot' mode (0x81)
+const byte  MIN_CON_TIME     =  30;          // 30ms - Minimal Conversion Time (based on 9-BIT Resolution)
+const byte  COM_SUCCESS      =   0;          // I2C Communication Success (No Error)
+const float C_TO_F_CONST     =   0.5555556;  // For faster Convert Degrees Fahrenheit to Celsius method
 
 typedef enum:byte {
     TEMP   = 0,
@@ -172,7 +172,7 @@ typedef enum:byte {
 // update keywords
 
 class MCP9802 {
-     public:
+    public:
         MCP9802(int devAddr);
         ~MCP9802();
         byte   ping();
@@ -184,44 +184,32 @@ class MCP9802 {
         byte   getTempUnit();
         byte   getComResult();
         float  getTemp();
-        int    getTemp16();
         float  getHyst();
-        int    getHyst16();
         float  getLimit();
-        int    getLimit16();
         float  singleCon();
-        int    singleCon16();
         void   setAlertType(alert_type_t alertType);
         void   setAlertMode(alert_mode_t alertMode);
         void   setFaultQueue(fault_queue_t fqVal);
         void   setResolution(resolution_t resVal);
         void   setConMode(con_mode_t conMode);
         void   setTempUnit(temp_unit_t newTempUnit);
-        void   setHyst(int newHyst);
-//        void   setHyst(float newHyst);
-        void   setHyst(double newHyst);
-        void   setHyst16(int newHyst16);
+        void   setHyst(float newHyst);
         void   setLimit(float newLimit);
-        void   setLimit16(int newLimit16);
         void   reset();
-
-    int    getData16(reg_ptr_t ptr);
-
-        void   setRawData();
-        int    getRawData();
-    
     private:
         int    _devAddr;
         byte   _tempUnit;
         byte   _comBuffer;
         byte   _singleConfig;
-        void   initCall(byte ptrByte);
+        void   initCall(byte ptr);
         void   endCall();
         byte   getConfig();
+        float  getData(reg_ptr_t ptr);
         void   setConfig(byte newConfig);
-        void   setData(reg_ptr_t ptr, int newData);
         void   setData(reg_ptr_t ptr, float newData);
-        void   setData16(reg_ptr_t ptr, int newData16);
+        float  convertCtoF(float valC);
+        float  convertFtoC(float valF);
+        float  roundToHalfDegC(float valC);
         friend String MCP9802ComStr(const MCP9802&);
         friend String MCP9802InfoStr(const MCP9802&);
 };
