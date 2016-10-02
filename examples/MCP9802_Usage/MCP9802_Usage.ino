@@ -389,89 +389,66 @@ void testSetTempUnit() {
 }
 
 void testSetRegData() {
-    testSettingHyst();
+    testSetHyst();
     printDivider();
-    testSettingLimit();
+    testSetLimit();
 }
 
-void testSettingHyst() {
-    Serial.print(F("\nSETTING HYSTERESIS (CELSIUS)\n"));
-    testSetHystC();
-    MCP9802.setTempUnit(FAHRENHEIT);
-    Serial.print(F("\n\nSETTING HYSTERESIS (FAHRENHEIT)\n"));
-    testSetHystF();
-    MCP9802.setTempUnit(CELSIUS);
-}
-
-void testSetHystC() { 
-    float hystVal[6] = { 57, -32, 43.5, 21.1, -11.6, DEFAULT_HYST };
-    String valStr = "\nCurrent Hysteresis:\t";
-    valStr += String(MCP9802.getHyst(), 0);
-    Serial.print(valStr + "C\n");
-    for (byte i=0; i<6; i++) {
-        valStr = "\nSetting Hysteresis to:\t";
-            valStr += String(hystVal[i], 1);
-            MCP9802.setHyst(hystVal[i]);
-            valStr += "C...DONE\n\nNew Hysteresis:\t\t";
+void testSetHyst() {
+    String valStr;
+    float hystVal[5] = { 57, -32, 43.5, 21.1, -11.6 };
+    for (byte i=0; i<2 ; i++) {
+        Serial.print(F("\nSETTING HYSTERESIS ("));
+        Serial.print(MCP9802.getTempUnit() ? "FAHRENHEIT)\n" : "CELSIUS)\n");
+        for (byte j=0; j<5; j++) {
+            valStr = "\nCurrent Hysteresis:\t";
             valStr += String(MCP9802.getHyst(), 4);
+            valStr += (MCP9802.getTempUnit() ? "F" : "C");
+            Serial.print(valStr);
+            valStr = "\n\nSetting Hysteresis to:\t";
+            valStr += String(hystVal[j], 4);
+            MCP9802.setHyst(hystVal[j]);
+            valStr += (MCP9802.getTempUnit() ? "F" : "C");
+            valStr += ("...DONE\n");
+            Serial.print(valStr);
+        }
+        valStr = "\nCurrent Hysteresis:\t";
+        valStr += String(MCP9802.getHyst(), 4);
+        valStr += (MCP9802.getTempUnit() ? "F" : "C");
+        Serial.print(valStr);
+        Serial.print(F("\n"));
+        MCP9802.setTempUnit(MCP9802.getTempUnit() ? CELSIUS : FAHRENHEIT);
     }
-    Serial.print(valStr + "C\n");
+    MCP9802.setHyst(DEFAULT_HYST);
     quickDelay();
 }
 
-void testSetHystF() {
-    float hystVal[6] = { 134, -66, 110.3, 70.7, -54.9, DEFAULT_HYST };
-    String valStr = "\nCurrent Hysteresis:\t";
-    valStr += String(MCP9802.getHyst(), 0);
-    Serial.print(valStr + "F\n");
-    for (byte i=0; i<6; i++) {
-        valStr = "\nSetting Hysteresis to:\t";
-        valStr += String(hystVal[i], 4);
-        MCP9802.setHyst(hystVal[i]);
-        valStr += "F...DONE\n\nNew Hysteresis:\t\t";
-        valStr += String(MCP9802.getHyst(), 1);
-     }
-     Serial.print(valStr + "F\n");
-     quickDelay(); 
-}
-
-void testSettingLimit() {
-    Serial.print(F("\nSETTING LIMIT (CELSIUS)\n"));
-    testSetLimitC();
-    MCP9802.setTempUnit(FAHRENHEIT);   
-    Serial.print(F("\n\nSETTING LIMIT (FAHRENHEIT)\n"));
-    testSetLimitF();
-    MCP9802.setTempUnit(CELSIUS);   
-}
-
-void testSetLimitC() {
-    float limitVal[8] = { 64, -16, 35.5, 17.8, -24.5, DEFAULT_LIMIT };
-    String valStr = "\nCurrent Limit:\t\t";
-    valStr += String(MCP9802.getLimit(), 0);
-    Serial.print(valStr + "C\n");
-    for (byte i=0; i<6; i++) {
-        valStr = "\nSetting Limit to:\t";
-        valStr += String(limitVal[i], 1);
-        MCP9802.setLimit(limitVal[i]);
-        valStr += "C...DONE\n\nNew Limit:\t\t";
-        valStr += String(MCP9802.getLimit(), 1);
+void testSetLimit() {
+    String valStr;
+    float limitVal[5] = { 64, -16, 35.5, 17.8, -24.1 };
+    for (byte i=0; i<2 ; i++) {
+        Serial.print(F("\nSETTING LIMIT ("));
+        Serial.print(MCP9802.getTempUnit() ? "FAHRENHEIT)\n" : "CELSIUS)\n");
+        for (byte j=0; j<5; j++) {
+            valStr = "\nCurrent Limit:\t\t";
+            valStr += String(MCP9802.getLimit(), 4);
+            valStr += (MCP9802.getTempUnit() ? "F" : "C");
+            Serial.print(valStr);
+            valStr = "\n\nSetting Limit to:\t";
+            valStr += String(limitVal[j], 4);
+            MCP9802.setLimit(limitVal[j]);
+            valStr += (MCP9802.getTempUnit() ? "F" : "C");
+            valStr += ("...DONE\n");
+            Serial.print(valStr);
+        }
+        valStr = "\nCurrent Limit:\t\t";
+        valStr += String(MCP9802.getLimit(), 4);
+        valStr += (MCP9802.getTempUnit() ? "F" : "C");
+        Serial.print(valStr);
+        Serial.print(F("\n"));
+        MCP9802.setTempUnit(MCP9802.getTempUnit() ? CELSIUS : FAHRENHEIT);
     }
-    Serial.print(valStr + "C\n");
-    quickDelay();
-}
-
-void testSetLimitF() {
-    float limitVal[8] = { 255, -12, 213.5, 167.2, -24.7, DEFAULT_LIMIT };
-    String valStr = "\nCurrent Limit:\t\t";
-    valStr += String(MCP9802.getLimit(), 0);
-    Serial.print(valStr + "F\n");
-    for (byte i=0; i<6; i++) {
-        valStr += String(limitVal[i], 1);
-        MCP9802.setLimit(limitVal[i]);
-        valStr += "F...DONE\n\nNew Limit:\t\t";
-        valStr += String(MCP9802.getLimit(), 1);
-    }
-    Serial.print(valStr + "F\n");
+    MCP9802.setLimit(DEFAULT_LIMIT);
     quickDelay();
 }
 
