@@ -131,13 +131,6 @@ float MCP9802::getHyst() {
     return (getData16(HYST) / 16.0);
 }
 
-/*==============================================================================================================*
-    GET HYSTERESIS x 16
- *==============================================================================================================*/
-
-int MCP9802::getHyst16() {
-    return getData16(HYST);
-}
 
 /*==============================================================================================================*
     GET LIMIT
@@ -148,39 +141,18 @@ float MCP9802::getLimit() {
 }
 
 /*==============================================================================================================*
-    GET LIMIT x 16
- *==============================================================================================================*/
-
-int MCP9802::getLimit16() {
-    return getData16(LIMIT);
-}
-
-/*==============================================================================================================*
     SINGLE CONVERSION ('SINGLE-SHOT' MODE ONLY)
  *==============================================================================================================*/
 //  Conversion Time: 9-BIT = 40ms / 10-BIT = 70ms / 11-BIT = 130ms / 12-BIT = 250ms
 
 float MCP9802::singleCon() {
-    return (singleCon16() / 16.0);
-}
-
-/*==============================================================================================================*
-    SINGLE CONVERSION x 16 ('SINGLE-SHOT' MODE ONLY)
- *==============================================================================================================*/
-//  Conversion Time: 9-BIT = 40ms / 10-BIT = 70ms / 11-BIT = 130ms / 12-BIT = 250ms
-
-int MCP9802::singleCon16() {
     if (_singleConfig) {
         unsigned int conTime = MIN_CON_TIME * (1 << ((_singleConfig & 0x60) >> 5)) + 10;
         setConfig(_singleConfig | INIT_SINGLE_SHOT);
         delay(conTime);
-        return getTemp16();
-    } else {
-        return 0;
+        return getTemp();
     }
 }
-
-// conisder returning error code instrad of 0
 
 /*==============================================================================================================*
     SET ALERT OUTPUT TYPE (0 = COMPARATOR / 1 = INTERRUPT)
@@ -245,22 +217,6 @@ void MCP9802::setTempUnit(temp_unit_t newTempUnit) {          // (PARAMS: CELSIU
 }
 
 /*==============================================================================================================*
-    SET HYSTERESIS
- *==============================================================================================================*/
-
-void MCP9802::setHyst(float newHyst) {
-    setData(HYST, newHyst);
-}
-
-/*==============================================================================================================*
-    SET HYSTERESIS x 16
- *==============================================================================================================*/
-
-void MCP9802::setHyst16(int newHyst16) {
-    setData16(HYST, newHyst16);
-}
-
-/*==============================================================================================================*
     SET LIMIT
  *==============================================================================================================*/
 
@@ -269,11 +225,11 @@ void MCP9802::setLimit(float newLimit) {
 }
 
 /*==============================================================================================================*
-    SET LIMIT x 16
+ SET LIMIT x 16
  *==============================================================================================================*/
 
 void MCP9802::setLimit16(int newLimit16) {
-    setData16(LIMIT, newLimit16);
+    setData(LIMIT, (newLimit16 / 16));
 }
 
 /*==============================================================================================================*
@@ -333,7 +289,7 @@ int MCP9802::getData16(reg_ptr_t ptr) {                                    // PA
         Wire.requestFrom(_devAddr, DATA_BYTES);
         if (Wire.available() == DATA_BYTES) data16 = (Wire.read() << 8) | (Wire.read());
     }
-    return _tempUnit ? DegreeConverter::conC16toF16(data16 >> 4) : (data16 >> 4);
+    return (_tempUnit) ? (DegreeConverter::conC16toF16(data16) / 16) : (data16 / 16);
 }
 
 // check replacing last two lines with (Wire.read() << 4 | Wire.read() >> 4)
@@ -349,26 +305,63 @@ void MCP9802::setConfig(byte newConfig) {
 }
 
 /*==============================================================================================================*
-    SET DATA REGISTERS
+    SET REGISTER DATA
  *==============================================================================================================*/
 
-void MCP9802::setData(reg_ptr_t ptr, float newData) {                   // PARAMS: HYST / LIMIT
-    setData16(ptr, (int)((DegreeConverter::roundC(newData)) *  16));
-}
-
-// clean up DegreeConverter - see how many functions are used and change roundC (and thoers) to round
-
-/*==============================================================================================================*
-    SET DATA REGISTERS x 16
- *==============================================================================================================*/
-
-void MCP9802::setData16(reg_ptr_t ptr, int newData16) {                 // PARAMS: HYST / LIMIT
-    if ((ptr == HYST || ptr == LIMIT) &&
-        (_tempUnit ? (newData16 >= -1072 && newData16 <= 4112) : (newData16 >= -880 && newData16 <= 2000))) {
-        union Data16_t { int i; byte b[2]; } data16;
-        data16.i = _tempUnit ? DegreeConverter::conF16toC16(newData16 << 4) : (newData16 << 4);
+void MCP9802::setData(reg_ptr_t ptr, int newData) {                                   // PARAMS: HYST / LIMIT
+    if ((ptr == HYST || ptr == LIMIT) && (newData >= -55 && newData <= 125)) {
+//    if ((ptr == HYST || ptr == LIMIT) && (-55 <= newData && newData <= 125)) {
+        union Data_t { int i; byte b[2]; } data;
+        if (_tempUnit) newData = (int)DegreeConverter::roundC(DegreeConverter::conFtoC(newData));
+        data.i = (newData << 8);
         initCall(ptr);
-        for (byte i=2; i>0; i--) Wire.write(data16.b[i-1]);
+        for (byte j=2; j>0; j--) Wire.write(data.b[j-1]);
         endCall();
     }
 }
+
+/*==============================================================================================================*
+    SET HYSTERESIS (I)
+ *==============================================================================================================*/
+
+void MCP9802::setHyst(int newHyst) {
+    setData(HYST, newHyst);
+}
+
+/*==============================================================================================================*
+    SET HYSTERESIS (II)
+ *==============================================================================================================*/
+
+//void MCP9802::setHyst(float newHyst) {
+//    setHyst((int)(DegreeConverter::roundC(newHyst)));
+//}
+
+/*==============================================================================================================*
+    SET HYSTERESIS (III)
+ *==============================================================================================================*/
+
+void MCP9802::setHyst(double newHyst) {
+    setHyst((int)(DegreeConverter::roundC(newHyst)));
+}
+
+/*==============================================================================================================*
+    SET HYSTERESIS x 16
+ *==============================================================================================================*/
+
+void MCP9802::setHyst16(int newHyst16) {
+    setHyst((float)(newHyst16 / 16.0));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

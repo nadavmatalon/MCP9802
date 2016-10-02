@@ -348,7 +348,7 @@ Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
 
 
 __Destructor__  
-If, for whatever reason, you wish to destruct an existing MCP9802 object, you can use the following line to do so:
+If you want to destruct an existing MCP9802 object, you can use the following method to do so:
 
 ```
 ~MCP9802 device_name();

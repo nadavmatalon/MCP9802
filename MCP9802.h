@@ -197,13 +197,19 @@ class MCP9802 {
         void   setResolution(resolution_t resVal);
         void   setConMode(con_mode_t conMode);
         void   setTempUnit(temp_unit_t newTempUnit);
-//      void   setHyst(int newHyst);
-        void   setHyst(float newHyst);
+        void   setHyst(int newHyst);
+//        void   setHyst(float newHyst);
+        void   setHyst(double newHyst);
         void   setHyst16(int newHyst16);
-//      void   setLimit(int newLimit);
         void   setLimit(float newLimit);
         void   setLimit16(int newLimit16);
         void   reset();
+
+    int    getData16(reg_ptr_t ptr);
+
+        void   setRawData();
+        int    getRawData();
+    
     private:
         int    _devAddr;
         byte   _tempUnit;
@@ -212,9 +218,8 @@ class MCP9802 {
         void   initCall(byte ptrByte);
         void   endCall();
         byte   getConfig();
-        int    getData16(reg_ptr_t ptr);
         void   setConfig(byte newConfig);
-//      void   setData(reg_ptr_t ptr, int newData);
+        void   setData(reg_ptr_t ptr, int newData);
         void   setData(reg_ptr_t ptr, float newData);
         void   setData16(reg_ptr_t ptr, int newData16);
         friend String MCP9802ComStr(const MCP9802&);
