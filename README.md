@@ -3,23 +3,24 @@
 
 ## Introduction
 
-The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities, as well as a hardware I2C interface.
+The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities,  
+as well as a hardware I2C interface.
 
 This library contains a robust driver for the MCP9802 that exposes its entire functionality (i.e. Configuration, Temperature, Hysteresis, Limit, and Alert Settings), allowing the user to get/set data in degrees Celsius or Fahrenheit.
 
 ## Repository Contents
 
-* **MCP9802.h** - Library Header file.
-* **MCP9802.cpp** - Library Compilation.
-* **/utility** -
+- **MCP9802.h** - Library Header file.
+- **MCP9802.cpp** - Library Compilation.
+- **/utility** -  
 - **MCP9802InfoStr.h** - Header file containing a functional extention of the library to include generating pritable information String (see Note #9 below).
 - **MCP9802ComStr.h** - Header file containing a functional extention of the library to include generating a pritable I2C Communication Result String (see Note #10 below).
-* **/examples** - 
+- **/examples** - 
 - **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing whether the MCP9802 is hooked-up and operating correctly.
 - **MCP9802_Usage/MCP9802_Usage.ino** - A much more extensive sketch offering a complete usage illustration, as well as a rubust testing mechanism.
 - **MCP9802_Info/MCP9802_Info.ino** - A short sketch showing how to generate a Printable Device Information String of the MCP9802's current settings (i.e. Configuration, Limit &anp; Hysteresis registers, etc.).
-- **/MCP9802_I2C_Status/MCP9802_I2C_Status.info** - A short sketch for verifying I2C communication has been established between the controller and the MCP9802.
-* **/extras** - 
+- **/MCP9802_I2C_Status/MCP9802_I2C_Status.ino** - A short sketch for verifying I2C communication has been established between the controller and the MCP9802.
+- **/extras** - 
 - **License.txt** - A cope of the end-user license agreement.
 * **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
 * **library.properties** - General library properties for the Arduino's IDE (>1.5) Library Package Manager.
@@ -249,7 +250,7 @@ Description:&nbsp;&nbsp;&nbsp;Resets the device to power-up default settings (ex
 * CONVERSION MODE: CONTINUOUS
 * DEGREES TYPE: CELSIUS
 * HYSTERESIS: 0x9600 (75°C)
-* LIMIT: 0xA000 (80°C)<br>
+* LIMIT: 0xA000 (80°C)
 
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
@@ -266,18 +267,18 @@ If you want to destruct an existing MCP9802 object, you can use the following me
 ```
 >__NOTE__: replace the '__device_name__' above with the name of your MCP9802 device.
 
-###Extended Functionality\*
+## Extended Functionality*
 
-\(\* requires an additional '\#include' of the relevant *.h file as shown in the corresponding example sketches\)
+(* requires an additional '\#include' of the relevant *.h file as shown in the corresponding example sketches)
 
 __MCP9802ComStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
-Description:&nbsp;&nbsp;Returns printable string containing human-friendly information about the device's latest I2C communication result
+Description:&nbsp;&nbsp;Returns printable string containing human-friendly information about the device's latest I2C communication result  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
 
 __MCP9802InfoStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
-Description:&nbsp;&nbsp;Returns printable string containing detailed information about the device's current settings 
+Description:&nbsp;&nbsp;Returns printable string containing detailed information about the device's current settings   
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
 
 ## RUNNING THE EXAMPLE SKETCHES
@@ -289,12 +290,14 @@ Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
 
 ## BUG REPORTS
 
-Please report any issues/bugs/suggestions at the 'Issues' section of this Github repository.
+Please report any issues/bugs/suggestions at the [Issues](https://github.com/nadavmatalon/MCP9802/issues) section of this Github repository.
 
 ## TODO
 
 - __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit  
+<br>
 - __DEVICE INFORMATION STRING__: Replace use String class with string class or other alternative (?)
+<br><br>
 
 ## LICENSE
 
