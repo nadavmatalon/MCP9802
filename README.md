@@ -8,6 +8,10 @@ as well as a hardware I2C interface.
 
 This library contains a robust driver for the MCP9802 that exposes its entire functionality (i.e. Configuration, Temperature, Hysteresis, Limit, and Alert Settings), allowing the user to get/set data in degrees Celsius or Fahrenheit.
 
+[MCP9802 DATASHEET](http://ww1.microchip.com/downloads/en/DeviceDoc/21909d.pdf)
+
+[MCP9802 DATASHEET ERRATA](http://ww1.microchip.com/downloads/en/DeviceDoc/80331B.pdf)
+
 ## Repository Contents
 
 - **MCP9802.h** - Library Header file.
