@@ -53,7 +53,7 @@
   5) DEGREES CELSIUS & FAHRENHEIT
   
   The libraty offers the option of getting/setting all termperature values (Abmient [read-only], Limit [read-write] and/or Hysteresis [read-write]) 
-  in either degrees Celsuis or Fahrenheit.
+  in either degrees Celsuis or Fahrenheit (the default is degrees Celsius).
 
   6) DEGREES FAHRENHEIT ACCURACY LIMITATIONS
   
@@ -255,7 +255,7 @@ void testGetTempC() {
 }
 
 void testGetTempF() {
-    MCP9802.setTempUnit(FAHRENHEIT);    
+    MCP9802.setTempUnit(FAHRENHEIT);
     tempF = MCP9802.getTemp();
     Serial.print(F("\nTemp (F): \t"));
     Serial.println(tempF, 4);
@@ -280,7 +280,7 @@ void testGetHystF() {
     hystF = MCP9802.getHyst();
     Serial.print(F("\nHyst (F): \t"));
     Serial.println(hystF, 4);
-    MCP9802.setTempUnit(CELSIUS);    
+    MCP9802.setTempUnit(CELSIUS);
     quickDelay();
 }
 
@@ -297,11 +297,11 @@ void testGetLimitC() {
 }
 
 void testGetLimitF() {    
-    MCP9802.setTempUnit(FAHRENHEIT);    
+    MCP9802.setTempUnit(FAHRENHEIT);
     limitF = MCP9802.getLimit();
     Serial.print(F("\nLimit (F): \t"));
     Serial.println(limitF, 4);
-    MCP9802.setTempUnit(CELSIUS);    
+    MCP9802.setTempUnit(CELSIUS);
     quickDelay();
 }
 
@@ -347,7 +347,7 @@ void testSetFaultQueue() {
         MCP9802.setFaultQueue(fqParams[i]);
         Serial.print(F("...DONE\n"));
         testGetFaultQueue();
-        quickDelay();     
+        quickDelay();
     }
 }
 
@@ -381,7 +381,7 @@ void testSetTempUnit() {
     for (byte i=0; i<2; i++) {
         Serial.print(F("\nSetting Temperature Unit to: "));
         i ? Serial.print("CELSIUS") : Serial.print("FAHRENHEIT");
-        MCP9802.setTempUnit(tempUnitParams[i]);  
+        MCP9802.setTempUnit(tempUnitParams[i]);
         Serial.print(F("...DONE\n"));
         testGetTempUnit();
         quickDelay();
@@ -456,10 +456,10 @@ void testSingleConversion() {
     Serial.print(F("\nChanging Conversion Mode to SINGLE-SHOT..."));
     MCP9802.setConMode(SINGLE);
     Serial.print(F("DONE\n"));
-    testGetSingleConC();  
-    MCP9802.setTempUnit(FAHRENHEIT);   
-    testGetSingleConF();       
-    MCP9802.setTempUnit(CELSIUS);   
+    testGetSingleConC();
+    MCP9802.setTempUnit(FAHRENHEIT);
+    testGetSingleConF();
+    MCP9802.setTempUnit(CELSIUS);
     quickDelay();
 }
 
@@ -487,11 +487,11 @@ void testAlertFunctionality() {
          testGetTempC();
          quickDelay();
          MCP9802.setLimit(tempC + 20);
-         quickDelay();         
+         quickDelay();
          MCP9802.setHyst(tempC + 10);
-         quickDelay();         
+         quickDelay();
          testGetLimitC();
-         testGetHystC();       
+         testGetHystC();
          testGetAlertType();
          testGetAlertMode();
          testGetTempUnit();
