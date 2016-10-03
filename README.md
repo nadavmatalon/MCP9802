@@ -13,19 +13,19 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 - **MCP9802.h** - Library Header file.
 - **MCP9802.cpp** - Library Compilation.
 - **/utility** -  
-- **MCP9802InfoStr.h** - Header file containing a functional extention of the library to include generating pritable information String (see Note #9 below).
-- **MCP9802ComStr.h** - Header file containing a functional extention of the library to include generating a pritable I2C Communication Result String (see Note #10 below).
-- **/examples** - 
-- **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing whether the MCP9802 is hooked-up and operating correctly.
-- **MCP9802_Usage/MCP9802_Usage.ino** - A much more extensive sketch offering a complete usage illustration, as well as a rubust testing mechanism.
-- **MCP9802_Info/MCP9802_Info.ino** - A short sketch showing how to generate a Printable Device Information String of the MCP9802's current settings (i.e. Configuration, Limit &anp; Hysteresis registers, etc.).
-- **/MCP9802_I2C_Status/MCP9802_I2C_Status.ino** - A short sketch for verifying I2C communication has been established between the controller and the MCP9802.
+  - **MCP9802InfoStr.h** - Header file containing a functional extention of the library to include generating pritable information String (see Note #9 below).
+  - **MCP9802ComStr.h** - Header file containing a functional extention of the library to include generating a pritable I2C Communication Result String (see Note #10 below).
+- **/examples** -   
+  - **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing whether the MCP9802 is hooked-up and operating correctly.
+  - **MCP9802_Usage/MCP9802_Usage.ino** - A much more extensive sketch offering a complete usage illustration, as well as a rubust testing mechanism.
+  - **MCP9802_Info/MCP9802_Info.ino** - A short sketch showing how to generate a Printable Device Information String of the MCP9802's current settings (i.e. Configuration, Limit &anp; Hysteresis registers, etc.).
+  - **/MCP9802_I2C_Status/MCP9802_I2C_Status.ino** - A short sketch for verifying I2C communication has been established between the controller and the MCP9802.
 - **/extras** - 
 - **License.txt** - A cope of the end-user license agreement.
-* **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
-* **library.properties** - General library properties for the Arduino's IDE (>1.5) Library Package Manager.
-* **README.md** - The readme file for this library.
-* **library.json** - JSON file for the Arduino's IDE (>1.5) Package Manager.
+- **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
+- **library.properties** - General library properties for the Arduino's IDE (>1.5) Library Package Manager.
+- **README.md** - The readme file for this library.
+- **library.json** - JSON file for the Arduino's IDE (>1.5) Package Manager.
 
 ## HOOK-UP
 
