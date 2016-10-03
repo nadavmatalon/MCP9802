@@ -8,6 +8,17 @@
  
     Ver. 1.0.0 - First release (23.9.16)
 
+ *===============================================================================================================*
+    INTRODUCTION
+ *===============================================================================================================*
+ 
+    The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities, 
+    as well as a hardware I2C interface.
+ 
+    This library contains a robust driver for the MCP9802 that exposes its entire functionality 
+    (i.e. Configuration, Temperature, Hysteresis, Limit, and Alert Settings), allowing the user to get/set data 
+    in degrees Celsius or Fahrenheit.
+ 
 *===============================================================================================================*
     I2C ADDRESSES
 *===============================================================================================================*
@@ -53,8 +64,13 @@
     CONFIGURATION REGIASTER (BIT 0): DEVICE MODE (0 = ON / 1 = OFF)
 *===============================================================================================================*
 
-    ON                  0x00        // Shutdown - DISABLED (0)  B00000000 (0) (Default)
-    OFF                 0x01        // Shutdown - ENABLED  (1)  B00000001 (1)
+    // The setting of this bit is completely interchangable with that of the Continuous/SINGLE-SHOT conversion 
+    // modes determined by Bit 7 of the Configuration Register. Therefore, there was no point in implementing 
+    // separate control functions (i.e. 'Turn Device On', 'Switch to Standby Mode', etc.) for this bit. Instead 
+    // this bit is implicitly set/cleared by the relevant private methods when needed.
+ 
+    ON                  0x00        // Standby - DISABLED (0)  B00000000 (0) (Default)
+    STANDBY             0x01        // Standby - ENABLED  (1)  B00000001 (1)
 
 *===============================================================================================================*
     CONFIGURATION REGIASTER (BIT 1): ALERT OUTPUT TYPE (0 = COMPARATOR / 1 = INTERUPT)
@@ -167,8 +183,6 @@ typedef enum:byte {
     CELSIUS    = 0,
     FAHRENHEIT = 1
 } temp_unit_t;
-
-// update readme
 
 class MCP9802 {
     public:

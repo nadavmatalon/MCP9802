@@ -93,6 +93,4 @@ String MCP9802InfoStr(const MCP9802& devParams) {
     return resultStr;
 }
 
-// remove Strings (replace with string)?
-
 #endif

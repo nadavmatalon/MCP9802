@@ -7,6 +7,17 @@
     Driver for MCP9802 (12-BIT I2C TEMPERATURE SENSOR)
  
     Ver. 1.0.0 - First release (23.9.16)
+
+ *===============================================================================================================*
+ INTRODUCTION
+ *===============================================================================================================*
+ 
+ The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities,
+ as well as a hardware I2C interface.
+ 
+ This library contains a robust driver for the MCP9802 that exposes its entire functionality
+ (i.e. Configuration, Temperature, Hysteresis, Limit, and Alert Settings), allowing the user to get/set data
+ in degrees Celsius or Fahrenheit.
  
  *==============================================================================================================*
     LICENSE
