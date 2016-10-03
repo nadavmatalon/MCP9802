@@ -11,7 +11,7 @@
   in default mode).
   
   INPORTANT: This library uses the 'WSWire' library (https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire) for I2C communication with 
-  the ADS1110, so it is NECESSARY to have it installed prior to using the current libraty. Alternatively, if you wish to use the 'Wire' library 
+  the MCP9802, so it is NECESSARY to have it installed prior to using the current libraty. Alternatively, if you wish to use the 'Wire' library 
   (https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) - or any other I2C library for that matter - simply change 
   the following line the the 'MCP9802.h' file:
       #include <WSWire.h>
@@ -66,10 +66,10 @@
   PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
-#include <MCP9802.h>
+#include "MCP9802.h"
 
 const int  MCP9802_ADDR = 0x48;                   // DEC: 72 - I2C address of the MCP9802 (Change as needed)
-const byte PIN_D2 = 2;                            // Arduino Digital Pin PIN 2 (connected to the MCP9802's ALERT Pin)
+const byte PIN_D2 = 2;                            // Arduino Digital Pin PIN 2 (connected to the MCP9802 ALERT Pin)
 float temp, limit, hyst;                          // Containers for register data
 
 typedef enum:byte {

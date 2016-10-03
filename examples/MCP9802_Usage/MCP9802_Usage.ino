@@ -17,7 +17,7 @@
   1) I2C COMMUNICATION LIBRARY
   
   This library uses the 'WSWire' library (https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire) for I2C communication with 
-  the ADS1110, so it is NECESSARY to have it installed prior to using the current libraty. Alternatively, if you wish to use the 'Wire' library 
+  the MCP9802, so it is NECESSARY to have it installed prior to using the current libraty. Alternatively, if you wish to use the 'Wire' library 
   (https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) - or any other I2C library for that matter - simply change 
   the following line the the 'MCP9802.h' file:
 
@@ -27,50 +27,47 @@
 
       #include <Wire.h>  // or to whatever I2C library name you are using.
 
-  As noted above, whichever library you intend to use for this purpose must be alredy installed for the ADS1110 library to work.
+  As noted above, whichever library you intend to use for this purpose must be alredy installed for the MCP9802 library to work.
 
   2) DEVICE TEMPERATURE RANGE
 
-  The MCP9802 is designed to measure temperature btween -55°C to 125°C (-67°F to 257°F). Measurments below or above this range will return 
-  the minimum or maximum measurable value. Concurently, the ability to custom set the HYSTERESIS or LIMIT values has been limited to this
-  range in software (even though logically, these values would need to be al least slightly lower or higher with respect to the actual 
-  measurable temperature).
+  The MCP9802 is designed to measure temperature btween -55°C to 125°C (-67°F to 257°F). Measurments below or above this range will return the minimum 
+  or maximum measurable value. Concurently, the ability to custom set the HYSTERESIS or LIMIT values has been limited to this range in software 
+  (even though logically, these values would need to be al least slightly lower or higher with respect to the actual measurable temperature). 
+  Hence, attempts to set these registers with a new value which doesn't fall within the said range will simply do nothing, leaving the current value as is. 
 
-  3) SHUTDOWN & CONVERSION MODE
-  
-  The first bit of the configuration byte controls the device mode of operation, namely: ON, in which the device operates in 'CONTINUOUS' mode,
-  or OFF - or more precisely HYBERNATE (as I2C communication remains active), in which the device operates in 'SINGLE-SHOT' nmode. As such, setting 
-  the 'CONVERSION MODE' of the device to 'CONTINUOUS' will effectively ensure that it is 'ON', while setting it to 'SINGLE-SHOT' mode will turn it OFF 
-  (or more accurately, put it in hybernate mode).
+  3) STANDBY & CONVERSION MODE
 
-  4) HYSTERESIS & LIMIT REGISTERS RESOLUTION
-  
-  The Temperature register has a setteble range of 9 to 12-BIT (0.5 to 0.0625 degrees Celsius respectively). However, both the LIMIT and HYSTERESIS 
-  registers only have a 9-BIT fixed resolution. This means these registers can only be set with a maximum accuracy of 0.5 degrees Celsius. 
-  Hence, while the relevant functions (i.e. setHyst() and setLimit() ) will happily accept any float value within the premmitted parameter range (-55°C to 125°C) 
-  for either of these two registers, this float value will be automatically rounded to the nearest 0.5C.
+  The first bit of the configuration byte controls the device mode of operation, namely: ON, in which the device operates in 'CONTINUOUS' mode, or OFF - 
+  or more precisely STANDBY (as I2C communication remains active) - in which the device operates in 'SINGLE-SHOT' nmode. As such, setting the 'CONVERSION MODE' 
+  of the device to 'CONTINUOUS' will effectively ensure that it is 'ON', while setting it to 'SINGLE-SHOT' mode will turn it into STANDBY mode.
 
-  5) DEGREES CELSIUS & FAHRENHEIT
-  
-  The libraty offers the option of getting/setting all termperature values (Abmient [read-only], Limit [read-write] and/or Hysteresis [read-write]) 
-  in either degrees Celsuis or Fahrenheit (the default is degrees Celsius).
+4) HYSTERESIS & LIMIT REGISTERS RESOLUTION
 
-  6) DEGREES FAHRENHEIT ACCURACY LIMITATIONS
-  
-  As the MCP9802 was designed primerily to work in a degrees Celsuis scheme, all Fahrenheit values obtained (or custom set by the user) 
-  can only represent as close approximations as possible with relation to the Celsius values generated or stored by the device. 
-  This limitation is perhaps most noticable when setting the LIMIT or HYSTERESIS registers to custom Fahrenheit values, as a double 
-  operation needs to take place, namely: conversion of this figure to the equivalent Celsius value and then rounding that value to 
-  the nearest 0.5 degree Celisus (the latter stems from the 9-BIT size of the HYSTERESIS & LIMIT registers as noted above).
+  The Temperature register has a setteble range of 9 to 12-BIT (0.5 to 0.0625 degrees Celsius respectively). However, both the HYSTERESIS and LIMIT registers 
+  only have a 9-BIT fixed resolution. This means these registers can only be set with a maximum accuracy of 0.5 degrees Celsius. Hence, while the relevant 
+  functions (i.e. setHyst() and setLimit() ) will happily accept any float value within the premmitted parameter range (-55°C to 125°C) for either of these 
+  two registers, this float value will be automatically rounded to the nearest 0.5C.
 
-  7) ALERT FUNCTIONALITY
-  
-  The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work
-  (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal
-  pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. 
-  However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up 
-  betweem the ALERT pin and VCC.
+5) DEGREES CELSIUS & FAHRENHEIT
 
+  The libraty offers the option of getting/setting all termperature values (Abmient [read-only], Limit [read-write] and/or Hysteresis [read-write]) in 
+  either degrees Celsuis or Fahrenheit (the default is degrees Celsius).
+
+6) DEGREES FAHRENHEIT ACCURACY LIMITATION
+
+  As the MCP9802 was designed to work in a degrees Celsuis scheme, all Fahrenheit values obtained (or custom set by the user) can only represent as close 
+  approximations as possible with relation to the Celsius values generated or stored by the device. This limitation is perhaps most noticable when setting 
+  the HYSTERESIS or LIMIT registers to custom Fahrenheit values, as a double operation needs to take place, namely: conversion of this figure to the equivalent 
+  Celsius value and then rounding that value to the nearest 0.5 degree Celisus (the latter stems from the 9-BIT size of the HYSTERESIS & LIMIT registers 
+  as noted above).
+
+7) ALERT OUTPUT SIGNAL
+
+  The MCP9802's Alert output signal is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work (this is true 
+  for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal pull-up resistor is used 
+  and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. However, for any real-life use of 
+  the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up betweem the ALERT pin and VCC.
 
   WIRING DIAGRAM
   --------------

@@ -56,9 +56,9 @@ As noted above, whichever library you intend to use for this purpose __must be a
 
 The MCP9802 is designed to measure temperature btween -55°C to 125°C (-67°F to 257°F). Measurments below or above this range will return the minimum or maximum measurable value. Concurently, the ability to custom set the HYSTERESIS or LIMIT values has been limited to this range in software (even though logically, these values would need to be al least slightly lower or higher with respect to the actual measurable temperature). Hence, attempts to set these registers with a new value which doesn't fall within the said range will simply do nothing, leaving the current value as is. 
 
-3) __Shutdwon & Conversion Mode__
+3) __Standby & Conversion Mode__
 
-The first bit of the configuration byte controls the device mode of operation, namely: ON, in which the device operates in 'CONTINUOUS' mode, or OFF - or more precisely HYBERNATE (as I2C communication remains active), in which the device operates in 'SINGLE-SHOT' nmode. As such, setting the 'CONVERSION MODE' of the device to 'CONTINUOUS' will effectively ensure that it is 'ON', while setting it to 'SINGLE-SHOT' mode will turn it OFF (or, rather, put it in hybernate mode).
+The first bit of the configuration byte controls the device mode of operation, namely: ON, in which the device operates in 'CONTINUOUS' mode, or OFF - or more precisely STANDBY (as I2C communication remains active) - in which the device operates in 'SINGLE-SHOT' nmode. As such, setting the 'CONVERSION MODE' of the device to 'CONTINUOUS' will effectively ensure that it is 'ON', while setting it to 'SINGLE-SHOT' mode will turn it into STANDBY mode.
 
 4) __Hysteresis & Limit Registers Resolution__
 
@@ -72,26 +72,22 @@ The libraty offers the option of getting/setting all termperature values (Abmien
 
 As the MCP9802 was designed to work in a degrees Celsuis scheme, all Fahrenheit values obtained (or custom set by the user) can only represent as close approximations as possible with relation to the Celsius values generated or stored by the device. This limitation is perhaps most noticable when setting the LIMIT or HYSTERESIS registers to custom Fahrenheit values, as a double operation needs to take place, namely: conversion of this figure to the equivalent Celsius value and then rounding that value to the nearest 0.5 degree Celisus (the latter stems from the 9-BIT size of the HYSTERESIS & LIMIT registers as noted above).
 
-7) __Alert Functionality__
+7) __Alert Output Signal__
 
 The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up betweem the ALERT pin and VCC.
 
-__8. Alert Output__
-
-The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up betweem the ALERT pin and VCC.
-
-__9. Device Information String__
+8) __Device Information String__
 
 It is now possible to extend the MCP9802 Library to include a function for generating a pritable device information string showing all the relevant details about the devices current Configuration, Limit & Hysteresis settings. As the additional functionality comes at the cost of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_Info](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_Info/MCP9802_Info.ino) example sketch for detailed explanation and an actual usage demo.
 
-__10. Device I2C Communications String__
+9) __Device I2C Communications String__
 
 It is now possible to also extend the MCP9802 Library to include a function for generating a pritable I2C Communications string showing the result of each I2C transaction in a human-friendly way, something that may be useful, for example, during debugging sessions. As the additional functionality comes at the cost of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_I2C_Status](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_I2C_Status/MCP9802_I2C_Status.ino) example sketch for detailed explanation and an actual usage demo.
 
 
 ## I2C ADDRESSES
 
-Each ADS1110 has 1 of 8 possible I2C addresses (factory hardwired & recognized by its specific part number & top marking on the package itself):
+Each MCP9802 has 1 of 8 possible I2C addresses (factory hardwired & recognized by its specific part number & top marking on the package itself):
 
 | PART NO.        | BIN      | HEX  | DEC | MARKING |
 |-----------------|----------|------|-----|---------|
@@ -296,6 +292,7 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 
 - __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit  
 - __DEVICE INFORMATION STRING__: Replace use String class with string class or other alternative (?)
+- __COMMUNICATION STATUS RESULT STRING__: Replace use String class with string class or other alternative (?)
 
 ## LICENSE
 

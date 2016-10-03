@@ -60,23 +60,22 @@
   PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
-#include <MCP9802.h>
+#include "MCP9802.h"
 #include "utility/MCP9802ComStr.h"
 
 const int MCP9802_ADDR = 0x48;                            // I2C address of the MCP9802 (Change as needed)
 
-MCP9802 MCP9802(MCP9802_ADDR);
+MCP9802 mcp9802(MCP9802_ADDR);
 
 void setup() {
     Serial.begin(9600);
     Wire.begin();
     while(!Serial);
     Serial.print(F("\nMCP9802 TEMPERATURE SENSOR\n"));
-    Serial.print(F("\nCurrent Temp Reading: "));
-    Serial.print(MCP9802.getTempC(), 1);
-    Serial.print(F("C\n"));
-    Serial.print(F("\nI2C Communications Status: "));
-    Serial.print(MCP9802ComStr(MCP9802));
+    Serial.print(F("\nCurrent Temp Reading:\t"));
+    Serial.print(mcp9802.getTemp(), 1);
+    Serial.print(F("C\n\nI2C Communications Status: "));
+    Serial.print(MCP9802ComStr(mcp9802));
     Serial.print(F("\n\n"));
 }
 

@@ -61,7 +61,3 @@ String MCP9802ComStr(const MCP9802& devParams) {
 }
 
 #endif
-
-// Check possibility of returning string (lower case - add \null in the end) for both functions
-
-// Check possibility of using 'stream' instead of Serial.print in sketch?
