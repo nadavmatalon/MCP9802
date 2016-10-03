@@ -12,49 +12,32 @@ MCP9802	KEYWORD1
 # Instances (KEYWORD2)
 #######################################
 
-Mcp9802	KEYWORD2
-
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
 ping	KEYWORD2
-getTempC16	KEYWORD2
-getTempC	KEYWORD2
-getTempF16	KEYWORD2
-getTempF	KEYWORD2
-getHystC16	KEYWORD2
-getHystC	KEYWORD2
-getHystF16	KEYWORD2
-getHystF	KEYWORD2
-getLimitC16	KEYWORD2
-getLimitC	KEYWORD2
-getLimitF16	KEYWORD2
-getLimitF	KEYWORD2
+getTemp	KEYWORD2
+getHyst	KEYWORD2
+getLimit	KEYWORD2
 getAlertType	KEYWORD2
 getAlertMode	KEYWORD2
 getFaultQueue	KEYWORD2
 getResolution	KEYWORD2
 getConMode	KEYWORD2
+getTempUnit	KEYWORD2
 setAlertType	KEYWORD2
 setAlertMode	KEYWORD2
 setFaultQueue	KEYWORD2
 setResolution	KEYWORD2
 setConMode	KEYWORD2
-setHystC	KEYWORD2
-setHystC16	KEYWORD2
-setLimitC	KEYWORD2
-setLimitC16	KEYWORD2
-setHystF	KEYWORD2
-setHystF16	KEYWORD2
-setLimitF	KEYWORD2
-setLimitF16	KEYWORD2
+setTempUnit	KEYWORD2
+setHyst	KEYWORD2
+setLimit	KEYWORD2
 reset	KEYWORD2
-singleConC	KEYWORD2
-singleConF	KEYWORD2
-singleConC16	KEYWORD2
-singleConF16	KEYWORD2
+singleCon	KEYWORD2
 getComResult	KEYWORD2
+MCP9802ComStr	KEYWORD2
 MCP9802InfoStr	KEYWORD2
 
 #######################################
@@ -62,14 +45,13 @@ MCP9802InfoStr	KEYWORD2
 #######################################
 
 DEFAULT_CONFIG	LITERAL1
-INIT_SINGLE_SHOT	LITERAL1
-DEFAULT_HYST_C	LITERAL1
-DEFAULT_HYST_F	LITERAL1
-DEFAULT_LIMIT_C	LITERAL1
-DEFAULT_LIMIT_F	LITERAL1
+DEFAULT_HYST	LITERAL1
+DEFAULT_HYST	LITERAL1
 MIN_CON_TIME	LITERAL1
 CONFIG_BYTE	LITERAL1
 DATA_BYTES	LITERAL1
+C_TO_F_CONST	LITERAL1
+INIT_SINGLE_SHOT	LITERAL1
 COMP	LITERAL1
 INT	LITERAL1
 ACTIVE_LOW	LITERAL1
@@ -84,6 +66,8 @@ RES_11	LITERAL1
 RES_12	LITERAL1
 CONT	LITERAL1
 SINGLE	LITERAL1
+CELSIUS	LITERAL1
+FAHRENHEIT	LITERAL1
 
 #######################################
 # Built-In Variables (LITERAL2)
@@ -95,3 +79,4 @@ alert_mode_t	LITERAL2
 fault_queue_t	LITERAL2
 resolution_t	LITERAL2
 con_mode_t	LITERAL2
+temp_unit_t	LITERAL2

@@ -1,14 +1,14 @@
 /* 
-  MCP9802 LIBRARY - DEVICE INFORMATION STRING EXAMPLE
-  ---------------------------------------------------
+  MCP9802 LIBRARY - I2C COMMUNICATION STATUS STRING EXAMPLE
+  ---------------------------------------------------------
 
   INTRODUCTION
   ------------
-  This sketch presents a minimal example of extending the MCP9802 Library to include an additional function for generating a printable device 
-  information string which may be useful, for example, during debugging sessions.
+  This sketch presents a minimal example of extending the MCP9802 Library to include an additional function for generating a printable 
+  I2C Communications Status string which may be useful, for example, during debugging sessions.
 
   As can be seen in the sketch below, implementation of this extended functionality only requires adding a single 'include' to the code, namely: 
-  to that of the relevant *.h file (MCP9802InfoStr.h).
+  to that of the relevant *.h file (MCP9802ComStr.h).
   
   Note that this functional extension does come at the cost of an increased memory usage, and therefore it seemed preferable to maintain it 
   as an optional add-on rather than include it in the core MCP9802 Library itself.
@@ -60,34 +60,23 @@
   PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
-#include "MCP9802.h"
-#include "utility/MCP9802InfoStr.h"
+#include <MCP9802.h>
+#include "utility/MCP9802ComStr.h"
 
-const int MCP9802_ADDR = 0x48;                       // I2C address of the MCP9802 (Change as needed)
+const int MCP9802_ADDR = 0x48;                            // I2C address of the MCP9802 (Change as needed)
 
-MCP9802 mcp9802(MCP9802_ADDR);
+MCP9802 MCP9802(MCP9802_ADDR);
 
 void setup() {
     Serial.begin(9600);
     Wire.begin();
     while(!Serial);
-    Serial.print(F("\n\nCURRENT SETTINGS:\n"));
-    Serial.print(MCP9802InfoStr(mcp9802));
-    Serial.print(F("\nCHANGING TO NEW SETTINGS..."));
-    mcp9802.setHyst(-50.7);
-    mcp9802.setLimit(-52.2);
-    mcp9802.setAlertType(INT);
-    mcp9802.setAlertMode(ACTIVE_HIGH);
-    mcp9802.setFaultQueue(FQ6);
-    mcp9802.setResolution(RES_12);
-    mcp9802.setConMode(SINGLE);
-    mcp9802.setTempUnit(FAHRENHEIT);
-    Serial.print(F("DONE\n"));
-    Serial.print(MCP9802InfoStr(mcp9802));
-    Serial.print(F("\nRESETTING DEVICE..."));
-    mcp9802.reset();
-    Serial.print(F("DONE\n"));
-    Serial.print(MCP9802InfoStr(mcp9802));  
+    Serial.print(F("\nMCP9802 TEMPERATURE SENSOR\n"));
+    Serial.print(F("\nCurrent Temp Reading: "));
+    Serial.print(MCP9802.getTempC(), 1);
+    Serial.print(F("C\n"));
+    Serial.print(F("\nI2C Communications Status: "));
+    Serial.print(MCP9802ComStr(MCP9802));
     Serial.print(F("\n\n"));
 }
 

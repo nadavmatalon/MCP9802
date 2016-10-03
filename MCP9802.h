@@ -8,6 +8,17 @@
  
     Ver. 1.0.0 - First release (23.9.16)
 
+ *===============================================================================================================*
+    INTRODUCTION
+ *===============================================================================================================*
+ 
+    The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities, 
+    as well as a hardware I2C interface.
+ 
+    This library contains a robust driver for the MCP9802 that exposes its entire functionality 
+    (i.e. Configuration, Temperature, Hysteresis, Limit, and Alert Settings), allowing the user to get/set data 
+    in degrees Celsius or Fahrenheit.
+ 
 *===============================================================================================================*
     I2C ADDRESSES
 *===============================================================================================================*
@@ -53,8 +64,13 @@
     CONFIGURATION REGIASTER (BIT 0): DEVICE MODE (0 = ON / 1 = OFF)
 *===============================================================================================================*
 
-    ON                  0x00        // Shutdown - DISABLED (0)  B00000000 (0) (Default)
-    OFF                 0x01        // Shutdown - ENABLED  (1)  B00000001 (1)
+    // The setting of this bit is completely interchangable with that of the Continuous/SINGLE-SHOT conversion 
+    // modes determined by Bit 7 of the Configuration Register. Therefore, there was no point in implementing 
+    // separate control functions (i.e. 'Turn Device On', 'Switch to Standby Mode', etc.) for this bit. Instead 
+    // this bit is implicitly set/cleared by the relevant private methods when needed.
+ 
+    ON                  0x00        // Standby - DISABLED (0)  B00000000 (0) (Default)
+    STANDBY             0x01        // Standby - ENABLED  (1)  B00000001 (1)
 
 *===============================================================================================================*
     CONFIGURATION REGIASTER (BIT 1): ALERT OUTPUT TYPE (0 = COMPARATOR / 1 = INTERUPT)
@@ -113,21 +129,19 @@
 #if defined(ARDUINO_ARCH_AVR)
     #include <Arduino.h>
     #include <WSWire.h>
-    #include "utility/DegreeConverter.h"
 #else
     #error “The MCP9802 library only supports AVR processors.”
 #endif
 
-const byte DEFAULT_CONFIG   =   0;      // Configuration Register Default Settings for 'Continuous' conversion mode (0x00)
-const byte INIT_SINGLE_SHOT = 129;      // Initiates a single conversion in 'Single-Shot' mode (0x81)
-const int  DEFAULT_HYST_C   =  75;      // Hysteresis Register Default Settings in degrees Celsius (0x9600)
-const int  DEFAULT_HYST_F   = 167;      // Hysteresis Register Default Settings in degrees Fahrenheit (0x00A7)
-const int  DEFAULT_LIMIT_C  =  80;      // Limit Register Default Settings in degrees Celsius (0xA000)
-const int  DEFAULT_LIMIT_F  = 176;      // Limit Register Default Settings in degrees Fahrenheit (0x00B0)
-const byte MIN_CON_TIME     =  30;      // 30ms - Minimal Conversion Time (for 9-BIT Resolution)
-const byte COM_SUCCESS      =   0;      // I2C Communication Success (No Error)
-const int  CONFIG_BYTE      =   1;      // Number of Configuration Register Bytes (CONFIG)
-const int  DATA_BYTES       =   2;      // Number of Data Register Bytes (TEMP, HYST, LIMIT)
+const byte  DEFAULT_CONFIG   =   0;          // Configuration Register Default Settings for 'Continuous' conversion mode (0x00)
+const int   DEFAULT_HYST     =  75;          // Hysteresis Register Default Settings in degrees Celsius (0x9600)
+const int   DEFAULT_LIMIT    =  80;          // Limit Register Default Settings in degrees Celsius (0xA000)
+const int   CONFIG_BYTE      =   1;          // Number of Configuration Register Bytes (CONFIG)
+const int   DATA_BYTES       =   2;          // Number of Data Register Bytes (TEMP, HYST, LIMIT)
+const byte  INIT_SINGLE_SHOT = 129;          // Initiates a single conversion in 'Single-Shot' mode (0x81)
+const byte  MIN_CON_TIME     =  30;          // 30ms - Minimal Conversion Time (based on 9-BIT Resolution)
+const byte  COM_SUCCESS      =   0;          // I2C Communication Success (No Error)
+const float C_TO_F_CONST     =   0.5555556;  // For faster Convert Degrees Fahrenheit to Celsius method
 
 typedef enum:byte {
     TEMP   = 0,
@@ -165,65 +179,51 @@ typedef enum:byte {
     SINGLE = 128
 } con_mode_t;
 
+typedef enum:byte {
+    CELSIUS    = 0,
+    FAHRENHEIT = 1
+} temp_unit_t;
+
 class MCP9802 {
-     public:
+    public:
         MCP9802(int devAddr);
         ~MCP9802();
         byte   ping();
-        int    getTempC16();
-        float  getTempC();
-        int    getTempF16();
-        float  getTempF();
-        int    getHystC16();
-        float  getHystC();
-        int    getHystF16();
-        float  getHystF();
-        int    getLimitC16();
-        float  getLimitC();
-        int    getLimitF16();
-        float  getLimitF();
         byte   getAlertType();
         byte   getAlertMode();
         byte   getFaultQueue();
         byte   getResolution();
         byte   getConMode();
-        void   setHystC(int newHystC);
-        void   setHystC(float newHystC);
-        void   setHystC(double newHystC);
-        void   setHystC16(int newHystC16);
-        void   setHystF(int newHystF);
-        void   setHystF16(int newHystF16);
-        void   setHystF(float newHystF);
-        void   setHystF(double newHystF);
-        void   setLimitC(int newLimitC);
-        void   setLimitC(float newLimitC);
-        void   setLimitC(double newLimitC);
-        void   setLimitC16(int newLimitC16);
-        void   setLimitF(int newLimitF);
-        void   setLimitF16(int newLimitF16);
-        void   setLimitF(float newLimitF);
-        void   setLimitF(double newLimitF);
+        byte   getTempUnit();
+        byte   getComResult();
+        float  getTemp();
+        float  getHyst();
+        float  getLimit();
+        float  singleCon();
         void   setAlertType(alert_type_t alertType);
         void   setAlertMode(alert_mode_t alertMode);
         void   setFaultQueue(fault_queue_t fqVal);
         void   setResolution(resolution_t resVal);
         void   setConMode(con_mode_t conMode);
+        void   setTempUnit(temp_unit_t newTempUnit);
+        void   setHyst(float newHyst);
+        void   setLimit(float newLimit);
         void   reset();
-        int    singleConC16();
-        float  singleConC();
-        int    singleConF16();
-        float  singleConF();
-        byte   getComResult();
     private:
         int    _devAddr;
+        byte   _tempUnit;
         byte   _comBuffer;
         byte   _singleConfig;
-        void   initCall(byte dataByte);
+        void   initCall(byte ptr);
         void   endCall();
         byte   getConfig();
-        int    getData(reg_ptr_t ptr);
+        float  getData(reg_ptr_t ptr);
         void   setConfig(byte newConfig);
-        void   setData(reg_ptr_t ptr, int newData);
+        void   setData(reg_ptr_t ptr, float newData);
+        float  convertCtoF(float valC);
+        float  convertFtoC(float valF);
+        float  roundToHalfDegC(float valC);
+        friend String MCP9802ComStr(const MCP9802&);
         friend String MCP9802InfoStr(const MCP9802&);
 };
 
