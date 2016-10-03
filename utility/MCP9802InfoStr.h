@@ -92,7 +92,7 @@ String MCP9802InfoStr(const MCP9802& devParams) {
     }
     return resultStr;
 }
-// change buffer to minimal size
+
 // remove Strings (replace with string)?
 
 #endif
