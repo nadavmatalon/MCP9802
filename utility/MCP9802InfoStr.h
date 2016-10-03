@@ -63,13 +63,14 @@ const char * const infoCodes[NUM_OF_INFO_STR] PROGMEM = {
  *==============================================================================================================*/
 
 String MCP9802InfoStr(const MCP9802& devParams) {
-    String result = "";
+    String resultStr = "";
     char devInfoBuffer[INFO_BUFFER_SIZE];
     int  devAddr   = devParams._devAddr;
+    byte tempUnit  = devParams._tempUnit;
     MCP9802 mcp9802(devAddr);
+    mcp9802.setTempUnit(tempUnit ? FAHRENHEIT : CELSIUS);
     byte  config   = devParams._singleConfig ? devParams._singleConfig : mcp9802.getConfig();
     byte  fqVal    = (config & 0x18) >> 2;
-    byte  tempUnit = devParams._tempUnit;
     float hyst     = mcp9802.getHyst();
     float limit    = mcp9802.getLimit();
     for (byte i=0; i<NUM_OF_INFO_STR; i++) {
@@ -85,17 +86,12 @@ String MCP9802InfoStr(const MCP9802& devParams) {
         if (i == 8)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (((config & 0x60) >> 5) + 9));
         if (i == 9)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config ? "SINGLE-SHOT" : "CONTINUOUS"));
         if (i == 10) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (tempUnit ? "FAHRENHEIT" : "CELSIUS"));
-        if (i == 11) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)hyst, (((int)hyst * 10) % 10), (tempUnit ? "F" : "C"));
-        if (i == 12) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)limit, (((int)hyst * 10) % 10), (tempUnit ? "F" : "C"));
-        result += String(devInfoBuffer);
+        if (i == 11) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)hyst, abs((int)(hyst * 10) % 10), (tempUnit ? "F" : "C"));
+        if (i == 12) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)limit, abs((int)(limit * 10) % 10), (tempUnit ? "F" : "C"));
+        resultStr += String(devInfoBuffer);
     }
-    return result;
+    return resultStr;
 }
-
-
-
-// change hyst and limit to show first decimal place
-// add alert status?
 // change buffer to minimal size
 // remove Strings (replace with string)?
 
