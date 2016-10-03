@@ -169,7 +169,6 @@ typedef enum:byte {
 } temp_unit_t;
 
 // update readme
-// update keywords
 
 class MCP9802 {
     public:

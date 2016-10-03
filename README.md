@@ -5,18 +5,20 @@
 
 The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities and hardware I2C interface.
 
-This library contains a robust driver for the MCP9802 which exposes all its Configuration, Hysteresis, Limit & Alert Settings; working in degrees Celsius or Fahrenheit; and, Integer or Floating-Point data manipulation.
+This library contains a robust driver for the MCP9802 which exposes all its Configuration, Hysteresis, Limit & Alert Settings in degrees Celsius or Fahrenheit.
 
 ## Repository Contents
 
 * **MCP9802.h** - Header file of the library.
 * **MCP9802.cpp** - Compilation file of the library.
-* **DegreeConverter.h** - Header file for Library helper methods.
-* **DegreeConverter.cpp** - Compilation file for Library helper methods.
+* **/utility** -
+- **MCP9802InfoStr.h** - Header file containing a functional extention of the library to include generating pritable information String (see note #9 below) 
+- **MCP9802ComStr.h** - Header file containing a functional extention of the library to include generating pritable I2C Communication Result String (see note #10 below)
 * **/examples** - 
-- **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing the MCP9802 is hooked-up and operating correctly.
-- **MCP9802_Usage/MCP9802_Usage.ino** - A much more detailed sketch offering a complete usage illustration, as well as a rubust testing mechanism.
-- **/MCP9802_Info/MCP9802_Info.ino** - A short sketch showing how to generate a printable device information String of the MCP9802's current settings (i.e. Configuration, Limit &anp; Hysteresis registers).
+- **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing the MCP9802 is hooked-up and operating correctly
+- **MCP9802_Usage/MCP9802_Usage.ino** - A much more detailed sketch offering a complete usage illustration, as well as a rubust testing mechanism
+- **/MCP9802_Info/MCP9802_Info.ino** - A short sketch showing how to generate a printable device information String of the MCP9802's current settings (i.e. Configuration, Limit &anp; Hysteresis registers)
+- **/MCP9802_I2C_Status/MCP9802_I2C_Status.info** - A short test for verifying I2C communication has been set up properly with the device
 * **/extras** - Complementary documentation (End-User License, etc.)
 * **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
 * **library.properties** - General library properties for the Arduino package manager.
@@ -48,52 +50,46 @@ to this:
 ```
 As noted above, whichever library you intend to use for this purpose __must be alredy installed__ for the MCP9802 library to work.
 
-__2. Shutdown & Conversion Mode__
+2) __Device Temperature Range__
 
-The first bit of the configuration byte controls the device mode of operation, namely: ON, in which the device operates in 'CONTINUOUS' mode,
-or OFF - or more precisely HYBERNATE (as I2C communication remains active), in which the device operates in 'SINGLE-SHOT' nmode. As such, setting 
-the 'CONVERSION MODE' of the device to 'CONTINUOUS' will effectively ensure that it is 'ON', while setting it to 'SINGLE-SHOT' mode will turn it OFF 
-(or more accurately, put it in hybernate mode).
+The MCP9802 is designed to measure temperature btween -55°C to 125°C (-67°F to 257°F). Measurments below or above this range will return the minimum or maximum measurable value. Concurently, the ability to custom set the HYSTERESIS or LIMIT values has been limited to thisrange in software (even though logically, these values would need to be al least slightly lower or higher with respect to the actual measurable temperature).
 
-__3. Hysteresis & Limit Registers Resolution__
+3) __Shutdwon & Conversion Mode__
 
-The Temperature register has a setteble range of 9 to 12-BIT (0.5 to 0.0625 degrees Celsius respectively). However, both the LIMIT and HYSTERESIS 
-registers only have a 9-BIT fixed resolution. This means these registers can only be set with a maximum resolution of 0.5 degrees Celsius. 
-Hence, while the relevant functions (e.g. setTempC(); ) will happily accept any float value within the premmitted parameter range (-55C to 125C) 
-for either of these two registers, this float value will be automatically rounded to the nearest 0.5C.
+The first bit of the configuration byte controls the device mode of operation, namely: ON, in which the device operates in 'CONTINUOUS' mode, or OFF - or more precisely HYBERNATE (as I2C communication remains active), in which the device operates in 'SINGLE-SHOT' nmode. As such, setting the 'CONVERSION MODE' of the device to 'CONTINUOUS' will effectively ensure that it is 'ON', while setting it to 'SINGLE-SHOT' mode will turn it OFF (or, rather, put it in hybernate mode).
 
-__4. Degrees Celsius & Fahrenheit__
+4) __Hysteresis & Limit Registers Resolution__
 
-The libraty offers the option of getting/setting all termperature values (Abmient [read-only], Limit [read-write] and/or Hysteresis [read-write]) 
-in either degrees Celsuis or Fahrenheit. These can be obtained in a floating point format or, if prefered, in a x16 integer format to speed-up 
-conversion calculations and save memory space. 
+The Temperature register has a setteble range of 9 to 12-BIT (0.5 to 0.0625 degrees Celsius respectively). However, both the LIMIT and HYSTERESIS registers only have a 9-BIT fixed resolution. This means these registers can only be set with a maximum accuracy of 0.5 degrees Celsius. Hence, while the relevant functions (i.e. setHyst() and setLimit() ) will happily accept any float value within the premmitted parameter range (-55°C to 125°C) for either of these two registers, this float value will be automatically rounded to the nearest 0.5C.
 
-__5. Degress Fahrenheit Precision Limitations__
+5) __Degrees Celsius & Fahrenheit__
 
-As the MCP9802 was designed primerily to work in a degree Celsuis scheme, all Fahrenheit values obtained (or custom set by the user) 
-can only represent approximations of the precise Celsius values generated or stored by the device. This limitation is particualarly 
-noticable when setting the LIMIT or HYSTERESIS registers to custom Fahrenheit values, as a double operation takes place, namely: 
-rounding the given value to the nearest 0.5 degree Celisus and the subsequent conversion of this figure to the equivalent Fahrenheit value.
+The libraty offers the option of getting/setting all termperature values (Abmient [read-only], Limit [read-write] and/or Hysteresis [read-write]) in either degrees Celsuis or Fahrenheit (the default is degrees Celsius).
 
-__6. Alert Output__
+6) __Degrees Fahrenheit Accuracy Limitation__
 
-The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work 
-(this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal 
-pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. 
-However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) 
-hooked-up betweem the ALERT pin and VCC.
+As the MCP9802 was designed to work in a degrees Celsuis scheme, all Fahrenheit values obtained (or custom set by the user) can only represent as close approximations as possible with relation to the Celsius values generated or stored by the device. This limitation is perhaps most noticable when setting the LIMIT or HYSTERESIS registers to custom Fahrenheit values, as a double operation needs to take place, namely: conversion of this figure to the equivalent Celsius value and then rounding that value to the nearest 0.5 degree Celisus (the latter stems from the 9-BIT size of the HYSTERESIS & LIMIT registers as noted above).
 
-__7. Device Information String__
+7) __Alert Functionality__
 
-It is now possible to extend the MCP9802 Library to include a function for generating a pritable device information string showing all the 
-relevant details about the devices current Configuration, Limit & Hysteresis settings. As the additional functionality comes at the cost 
-of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the 
-[MCP9802_Info](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_Info/MCP9802_Info.ino) example sketch for detailed explanation and an actual usage demo.
+The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up betweem the ALERT pin and VCC.
+
+__8. Alert Output__
+
+The MCP9802's Alert functionality is based on an 'open collector' architecture which means it requires a pull-up resistor in order to work (this is true for both Alert Types, i.e. 'ACTIVE-LOW' and 'ACTIVE-HIGH). For the purposes of this testing sketch, the Atmega's (weak) internal pull-up resistor is used and so the only connection needed in this context is between the MCP9802's ALERT pin and the Arduino's Digital Pin D2. However, for any real-life use of the device, it is highly recommended to implement a suitable external pull-up resistor (typically 10K) hooked-up betweem the ALERT pin and VCC.
+
+__9. Device Information String__
+
+It is now possible to extend the MCP9802 Library to include a function for generating a pritable device information string showing all the relevant details about the devices current Configuration, Limit & Hysteresis settings. As the additional functionality comes at the cost of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_Info](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_Info/MCP9802_Info.ino) example sketch for detailed explanation and an actual usage demo.
+
+__10. Device I2C Communications String__
+
+It is now possible to also extend the MCP9802 Library to include a function for generating a pritable I2C Communications string showing the result of each I2C transaction in a human-friendly way, something that may be useful, for example, during debugging sessions. As the additional functionality comes at the cost of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_I2C_Status](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_I2C_Status/MCP9802_I2C_Status.ino) example sketch for detailed explanation and an actual usage demo.
+
 
 ## I2C ADDRESSES
 
-Each ADS1110 has 1 of 8 possible I2C addresses (factory hardwired & recognized by its specific part number & top marking 
-on the package itself):
+Each ADS1110 has 1 of 8 possible I2C addresses (factory hardwired & recognized by its specific part number & top marking on the package itself):
 
 | PART NO.        | BIN      | HEX  | DEC | MARKING |
 |-----------------|----------|------|-----|---------|
@@ -147,64 +143,19 @@ Description:&nbsp;&nbsp;&nbsp;Searches for the MCP9802 at the pre-defined I2C Bu
 6 ... Timed-out while waiting for data to be sent<br>
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte  
 
-__getTempC16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__getTempC();__  
+__getTemp();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Celsius  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
-__getTempF16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None   
-Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__getTempF();__  
-Parameters:&nbsp;&nbsp;&nbsp;None   
-Description:&nbsp;&nbsp;&nbsp;Returns current temperature reading in degrees Fahrenheit    
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
-
-__getHystC16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register value in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__getHystC();__  
+__getHyst();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register value in degrees Celsius   
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
-__getHystF16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register setting in degrees Fahrenheit times 16    
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__getHystF();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;&nbsp;Returns the current Hysteresis register setting in degrees Fahrenheit   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
-
-__getLimitC16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Celsius times 16 
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__getLimitC();__  
+__getLimit();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Celsius    
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
-
-__getLimitF16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__getLimitF();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;&nbsp;Returns the current Limit register value in degrees Fahrenheit   
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
 
 __getAlertType();__  
@@ -221,6 +172,7 @@ __getFaultQueue();__
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Fault Queue setting (1 / 2 / 4 / 6 fault readings - i.e. below Hysteresis or above the Limit - before activating the alert)  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
+
 __getResolution();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Returns the current Resolution setting (9 = 9-BIT / 10 = 10-BIT / 11 = 11-BIT / 12 = 12-BIT)  
@@ -231,44 +183,25 @@ Parameters:&nbsp;&nbsp;&nbsp;None
 Description:&nbsp;&nbsp;&nbsp;Returns the current Conversion Mode setting (0 = CONTINUOUS / 1 = SINGLE-SHOT)  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
-__setHyst16();__  
-Parameters:&nbsp;&nbsp;&nbsp;int (range: -880 to +2000)  
-Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Celsius times 16   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+__getTempUnit();__  
+Parameters:&nbsp;&nbsp;&nbsp;None  
+Description:&nbsp;&nbsp;&nbsp;Returns the current Degrees Unit setting (0 = CELSIUS / 1 = FAHRENHEIT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
-__setHystC();__  
-Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55.0 to +125.0)  
+__singleCon();__  
+Parameters:&nbsp;&nbsp;&nbsp;None   
+Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
+Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Celsius  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
+
+__setHyst();__  
+Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55 to +125)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Celsius  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
-__setHystF16();__  
-Parameters:&nbsp;&nbsp;&nbsp;int (range: 1072 - to +4112)  
-Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
-
-__setHystF();__  
-Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -67.0 to +257.0)  
-Description:&nbsp;&nbsp;&nbsp;Sets the Hysteresis register value in degrees Fahrenheit  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
-
-__setLimitC16();__  
-Parameters:&nbsp;&nbsp;&nbsp;int (range: -880 to +2000)  
-Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
-
-__setLimitC();__  
-Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55.0  to +125.0)  
+__setLimit();__  
+Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -55 to +125)  
 Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Celsius   
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
-
-__setLimitF16();__  
-Parameters:&nbsp;&nbsp;&nbsp;int (range: -1072 to 4112)  
-Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
-
-__setLimitF();__  
-Parameters:&nbsp;&nbsp;&nbsp;int / float (range: -67.0 to +257.0)  
-Description:&nbsp;&nbsp;&nbsp;Sets the Limit register value in degrees Fahrenheit  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
 __setAlertType();__  
@@ -296,6 +229,11 @@ Parameters:&nbsp;&nbsp;&nbsp;CONT / SINGLE
 Description:&nbsp;&nbsp;&nbsp;Sets the Conversion Mode (CONTINUOUS / SINGLE-SHOT)  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
+__setTempUnit();__  
+Parameters:&nbsp;&nbsp;&nbsp;CELSIUS / FAHRENEHIT  
+Description:&nbsp;&nbsp;&nbsp;Sets the Degree Unit type (CELSIUS / FAHRENEHIT)  
+Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
+
 __reset();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Resets the device to power-up default settings (except for the TEMP Register which is Read-Only), as follows:
@@ -307,45 +245,16 @@ Description:&nbsp;&nbsp;&nbsp;Resets the device to power-up default settings (ex
 * FAULT-QUEUE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 FAULT
 * RESOLUTION:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9-BIT
 * CONVERSION MODE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONTINUOUS
+* DEGREES TYPE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CELSIUS
 * LIMIT (DATA):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0xA000 (80°C)
 * HYST (DATA):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x9600 (75°C)<br>
 
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None
 
-__singleConC16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None   
-Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
-Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Celsius times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__singleConC();__  
-Parameters:&nbsp;&nbsp;&nbsp;None   
-Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
-Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Celsius  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
-
-__singleConF16();__  
-Parameters:&nbsp;&nbsp;&nbsp;None   
-Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
-Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Fahrenheit times 16  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int
-
-__singleConF();__  
-Parameters:&nbsp;&nbsp;&nbsp;None   
-Conditions:&nbsp;&nbsp;&nbsp;&nbsp;Works only in __Single-Shot__ mode  
-Description:&nbsp;&nbsp;&nbsp;Carries out a single conversion &amp; returns a temperature reading in degrees Fahrenheit  
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float
-
 __getComResult();__  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;Returns the latest I2C Communication result code (see Success/Error codes above)  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
-
-__getComMsg();__  
-Parameters:&nbsp;&nbsp;&nbsp;None  
-Description:&nbsp;&nbsp;Returns the latest I2C Communication result in a human-friendly String format 
-Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
-
 
 __Destructor__  
 If you want to destruct an existing MCP9802 object, you can use the following method to do so:
@@ -355,9 +264,9 @@ If you want to destruct an existing MCP9802 object, you can use the following me
 ```
 >__NOTE__: replace the '__device_name__' above with the name of your MCP9802 device.
 
-###Extended Functionality*
+###Extended Functionality\*
 
-(* requires an additional 'include' of the relevant *.h file as shown in the corresponding example sketches)
+\(\* requires an additional 'include' of the relevant *.h file as shown in the corresponding example sketches\)
 
 __MCP9802ComStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
@@ -372,9 +281,8 @@ Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String
 ## RUNNING THE EXAMPLE SKETCHES
 
 1) Hook-up the MCP9802 to the Arduino as explained above.
-2) If you like, connect a LED with an appropriate series resistor between the MCP9802's ALERT pin (PIN 3) and ground
-3) Upload the relevant example sketch to the Arduino.
-4) Open the Serial Communications Window (make sure the baud-rate is set to 9600 or change them in the sketch to match your Serial Port buad rate).
+2) Upload the relevant example sketch to the Arduino.
+3) Open the Serial Communications Window \(make sure the baud-rate is set to 9600 or change it in the sketch to match your Serial Port's buad-rate\).
 
 
 ## BUG REPORTS
@@ -384,10 +292,6 @@ Please report any issues/bugs/suggestions at the 'Issues' section of this Github
 
 ## LICENSE
 
-This library is a free software; you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation; either version 3.0 of 
-the License, or any later version.This program is distributed in the hope that it will be useful, 
-but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
+This library is a free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3.0 of the License, or any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 

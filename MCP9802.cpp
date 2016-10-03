@@ -228,9 +228,9 @@ void MCP9802::setLimit(float newLimit) {
 void MCP9802::reset() {
     _singleConfig = CONT;
     _tempUnit = CELSIUS;
+    setTempUnit(CELSIUS);
     setConMode(SINGLE);                 // check if needed
     setConfig(DEFAULT_CONFIG);
-    setTempUnit(CELSIUS);
     setHyst(DEFAULT_HYST);
     setLimit(DEFAULT_LIMIT);
 }
