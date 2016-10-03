@@ -21,7 +21,7 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
   - **MCP9802_Info/MCP9802_Info.ino** - A short sketch showing how to generate a Printable Device Information String of the MCP9802's current settings (i.e. Configuration, Limit &anp; Hysteresis registers, etc.).
   - **/MCP9802_I2C_Status/MCP9802_I2C_Status.ino** - A short sketch for verifying I2C communication has been established between the controller and the MCP9802.
 - **/extras** - 
-- **License.txt** - A cope of the end-user license agreement.
+  - **License.txt** - A cope of the end-user license agreement.
 - **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
 - **library.properties** - General library properties for the Arduino's IDE (>1.5) Library Package Manager.
 - **README.md** - The readme file for this library.
@@ -295,9 +295,7 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 ## TODO
 
 - __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit  
-<br>
 - __DEVICE INFORMATION STRING__: Replace use String class with string class or other alternative (?)
-<br><br>
 
 ## LICENSE
 
