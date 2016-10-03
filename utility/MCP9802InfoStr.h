@@ -25,7 +25,7 @@
 
 #include <avr/pgmspace.h>
 
-const int  INFO_BUFFER_SIZE = 40;
+const int  INFO_BUFFER_SIZE = 30;
 const byte NUM_OF_INFO_STR  = 13;
 
 const char infoStr0[]  PROGMEM = "\nMCP9802 DEVICE INFORMATION";

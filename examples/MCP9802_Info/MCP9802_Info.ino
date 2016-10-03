@@ -71,6 +71,17 @@ void setup() {
     Serial.begin(9600);
     Wire.begin();
     while(!Serial);
+    Serial.print(MCP9802InfoStr(mcp9802));
+    mcp9802.setHyst(-50.7);
+    mcp9802.setLimit(-52.2);
+    mcp9802.setAlertType(INT);
+    mcp9802.setAlertMode(ACTIVE_HIGH);
+    mcp9802.setFaultQueue(FQ6);
+    mcp9802.setResolution(RES_12);
+    mcp9802.setConMode(SINGLE);
+    mcp9802.setTempUnit(FAHRENHEIT);
+    Serial.print(MCP9802InfoStr(mcp9802));  
+    mcp9802.reset();
     Serial.print(MCP9802InfoStr(mcp9802));  
 }
 
