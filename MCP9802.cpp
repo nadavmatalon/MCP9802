@@ -38,7 +38,7 @@
  *==============================================================================================================*/
 
 MCP9802::MCP9802(int devAddr) {
-    _devAddr        = devAddr;              // add default address for constructor
+    _devAddr        = devAddr;
     _tempUnit       = CELSIUS;
     _singleConfig   = DEFAULT_CONFIG;
 }
