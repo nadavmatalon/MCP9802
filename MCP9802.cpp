@@ -7,6 +7,9 @@
     Driver for MCP9802 (12-BIT I2C TEMPERATURE SENSOR)
  
     Ver. 1.0.0 - First release (23.9.16)
+    Ver. 1.1.0 - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range
+                 (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value 
+                 rather than do nothing (4.10.16)
 
  *===============================================================================================================*
  INTRODUCTION
@@ -308,7 +311,8 @@ void MCP9802::setConfig(byte newConfig) {
 void MCP9802::setData(reg_ptr_t ptr, float newData) {                                 // PARAMS: HYST / LIMIT
     union Data_t { int i; byte b[2]; } data16;
     if (_tempUnit) newData = convertFtoC(newData);
-    if ((ptr == HYST || ptr == LIMIT) && (-55 <= newData && newData <= 125)) {
+    if (ptr == HYST || ptr == LIMIT) {
+        newData = constrain(newData, MINIMUM_TEMP, MAXIMUM_TEMP);
         data16.i = (int)(roundToHalfDegC(newData) * 256.0);
         initCall(ptr);
         for (byte j=2; j>0; j--) Wire.write(data16.b[j-1]);

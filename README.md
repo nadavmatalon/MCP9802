@@ -1,7 +1,7 @@
 
 # MCP9802 AVR DRIVER LIBRARY
 
-## Introduction
+## INTRODUCTION
 
 The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities,  
 as well as a hardware I2C interface.
@@ -12,7 +12,7 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 
 [MCP9802 DATASHEET ERRATA](http://ww1.microchip.com/downloads/en/DeviceDoc/80331B.pdf)
 
-## Repository Contents
+## REPOSITORY CONTENTS
 
 - **MCP9802.h** - Library Header file.
 - **MCP9802.cpp** - Library Compilation.
@@ -40,7 +40,7 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 * __PIN 5 (SDA)__ - Conntect SDA to the Arduino's PIN A4 with a 2K2 pull-up resistor
 * __DECOUPING__: Connect a 0.1uF Ceramic Capacitor between the MCP9802's VCC & GND PINS
 
-## General Notes
+## GENERAL NOTES
 
 __1. I2C Communications Library__
 
@@ -58,7 +58,7 @@ As noted above, whichever library you intend to use for this purpose __must be a
 
 2) __Device Temperature Range__
 
-The MCP9802 is designed to measure temperature btween -55°C to 125°C (-67°F to 257°F). Measurments below or above this range will return the minimum or maximum measurable value. Concurently, the ability to custom set the HYSTERESIS or LIMIT values has been limited to this range in software (even though logically, these values would need to be al least slightly lower or higher with respect to the actual measurable temperature). Hence, attempts to set these registers with a new value which doesn't fall within the said range will simply do nothing, leaving the current value as is. 
+The MCP9802 is designed to measure temperature btween -55°C to 125°C (-67°F to 257°F). Measurments below or above this range will return the minimum or maximum measurable value. Concurently, the ability to custom set the HYSTERESIS or LIMIT values has been limited to this range in software (even though logically, these values would need to be al least slightly lower or higher with respect to the actual measurable temperature). Hence, attempts to set these registers with a new value beyond the said range will actually set the register's value to the maximum/minimum allowable value. 
 
 3) __Standby & Conversion Mode__
 
@@ -297,6 +297,11 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 - __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit  
 - __DEVICE INFORMATION STRING__: Replace use String class with string class or other alternative (?)
 - __COMMUNICATION STATUS RESULT STRING__: Replace use String class with string class or other alternative (?)
+
+## VERSION HISTORY
+
+__Ver. 1.0.0__ - First release (26.9.16)
+__Ver. 1.1.0__ - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value rather than do nothing (4.10.16)
 
 ## LICENSE
 
