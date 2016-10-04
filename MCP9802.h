@@ -7,6 +7,9 @@
     Driver for MCP9802 (12-BIT I2C TEMPERATURE SENSOR)
  
     Ver. 1.0.0 - First release (23.9.16)
+    Ver. 1.1.0 - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range
+                 (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value
+                 rather than do nothing (4.10.16)
 
  *===============================================================================================================*
     INTRODUCTION
@@ -141,7 +144,9 @@ const int   DATA_BYTES       =   2;          // Number of Data Register Bytes (T
 const byte  INIT_SINGLE_SHOT = 129;          // Initiates a single conversion in 'Single-Shot' mode (0x81)
 const byte  MIN_CON_TIME     =  30;          // 30ms - Minimal Conversion Time (based on 9-BIT Resolution)
 const byte  COM_SUCCESS      =   0;          // I2C Communication Success (No Error)
-const float C_TO_F_CONST     =   0.5555556;  // For faster Convert Degrees Fahrenheit to Celsius method
+const float MINIMUM_TEMP     = -55;          // Minimum temperature value (in degrees Celsius) for Hysteresis & Limit registers
+const float MAXIMUM_TEMP     = 125;          // Maximum temperature value (in degrees Celsius) for Hysteresis & Limit registers
+const float C_TO_F_CONST     =   0.5555556;  // For faster Convert Degrees Fahrenheit to Celsius
 
 typedef enum:byte {
     TEMP   = 0,

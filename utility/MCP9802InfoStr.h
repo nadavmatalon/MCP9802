@@ -6,7 +6,10 @@
  
     A complemetary Device Information String Generator Debugging Function for the MCP9802
  
-    Rev 1.0 - First release (26.9.16)
+    Ver. 1.0.0 - First release (26.9.16)
+    Ver. 1.1.0 - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range
+         (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value
+         rather than do nothing (4.10.16)
 
 *===============================================================================================================*
     LICENSE
