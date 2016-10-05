@@ -300,8 +300,9 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 
 ## VERSION HISTORY
 
-__Ver. 1.0.0__ - First release (26.9.16)
-__Ver. 1.1.0__ - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value rather than do nothing (4.10.16)
+__Ver. 1.0.0__ - First release (26.9.16)  
+__Ver. 1.1.0__ - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value rather than do nothing (4.10.16)  
+__Ver. 1.2.0__ - Changed license to MIT (5.10.16)  
 
 ## LICENSE
 
