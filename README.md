@@ -1,6 +1,12 @@
 
 # MCP9802 AVR DRIVER LIBRARY
 
+[![Platform Badge](https://img.shields.io/badge/platform-Arduino-orange.svg)](https://www.arduino.cc/)
+
+[![SemVer](https://img.shields.io/badge/SemVer-1.2.0-brightgreen.svg)](http://semver.org/)
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 ## INTRODUCTION
 
 The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities,  
