@@ -2,7 +2,7 @@
 
     @file     MCP9802.cpp
     @author   Nadav Matalon
-    @license  GNU General Public License
+    @license  MIT (c) 2016 Nadav Matalon
  
     Driver for MCP9802 (12-BIT I2C TEMPERATURE SENSOR)
  
@@ -11,27 +11,28 @@
                  (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value 
                  rather than do nothing (4.10.16)
 
- *===============================================================================================================*
- INTRODUCTION
- *===============================================================================================================*
- 
- The MCP9802 is a 9 to 12-Bit Single-Channel Temperature Sensor with Hysteresis & Alert capabilities,
- as well as a hardware I2C interface.
- 
- This library contains a robust driver for the MCP9802 that exposes its entire functionality
- (i.e. Configuration, Temperature, Hysteresis, Limit, and Alert Settings), allowing the user to get/set data
- in degrees Celsius or Fahrenheit.
- 
  *==============================================================================================================*
     LICENSE
  *==============================================================================================================*
  
-    This library is a free software; you can redistribute it and/or modify it under the terms of the
-    GNU General Public License as published by the Free Software Foundation; either version 3.0 of the
-    License, or any later version. This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-    PURPOSE. See the GNU General Public License for more details.
-
+     The MIT License (MIT)
+     Copyright (c) 2016 Nadav Matalon
+     
+     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+     documentation files (the "Software"), to deal in the Software without restriction, including without
+     limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+     the Software, and to permit persons to whom the Software is furnished to do so, subject to the following
+     conditions:
+     
+     The above copyright notice and this permission notice shall be included in all copies or substantial
+     portions of the Software.
+     
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+     LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ 
  *==============================================================================================================*/
 
 #include "MCP9802.h"
