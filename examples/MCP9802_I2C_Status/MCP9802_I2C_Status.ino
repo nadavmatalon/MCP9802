@@ -83,10 +83,11 @@ void setup() {
     Serial.begin(9600);
     Wire.begin();
     while(!Serial);
-    Serial.print(F("\nMCP9802 TEMPERATURE SENSOR\n"));
-    Serial.print(F("\nCurrent Temp Reading:\t"));
+    Serial.print(F("\nMCP9802 TEMPERATURE SENSOR"));
+    Serial.print(F("\n--------------------------"));
+    Serial.print(F("\n\nCURRENT TEMP:\t"));
     Serial.print(mcp9802.getTemp(), 1);
-    Serial.print(F("C\n\nI2C Communications Status: "));
+    Serial.print(F("C\n\nI2C STATUS:\t"));
     Serial.print(MCP9802ComStr(mcp9802));
     Serial.print(F("\n\n"));
 }
