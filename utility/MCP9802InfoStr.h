@@ -11,7 +11,11 @@
          (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value
          rather than do nothing (4.10.16)
     Ver. 1.2.0 - Changed license to MIT (5.10.16)
-
+    Ver. 1.3.0 - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class
+                 instead of the String class to further reduce memory footprint. For this purpose, added PString.h
+                 PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED)
+                 field to device information string (9.10.16)
+ 
 *===============================================================================================================*
     LICENSE
 *===============================================================================================================*
@@ -40,25 +44,28 @@
 #define MCP9802InfoStr_h
 
 #include <avr/pgmspace.h>
+#include "utility/MCP9802ComStr.h"
 
-const int  INFO_BUFFER_SIZE = 30;
-const byte NUM_OF_INFO_STR  = 13;
+const int  INFO_BUFFER_SIZE = 60;
+const byte NUM_OF_INFO_STR  = 15;
 
 const char infoStr0[]  PROGMEM = "\nMCP9802 DEVICE INFORMATION";
 const char infoStr1[]  PROGMEM = "\n--------------------------";
 const char infoStr2[]  PROGMEM = "\nI2C ADDRESS:\t %d (%#X)";
-const char infoStr3[]  PROGMEM = "\nCONFIG BYTE:\t B%d%d%d%d%d%d%d%d";
-const char infoStr4[]  PROGMEM = "\nDEVICE MODE:\t %s";
-const char infoStr5[]  PROGMEM = "\nALERT TYPE:\t %s";
-const char infoStr6[]  PROGMEM = "\nALERT MODE:\t ACTIVE-%s";
-const char infoStr7[]  PROGMEM = "\nFAULT-QUEUE:\t %d FAULT%s";
-const char infoStr8[]  PROGMEM = "\nRESOLUTION:\t %d-BIT";
-const char infoStr9[]  PROGMEM = "\nCONVERSION MODE: %s";
-const char infoStr10[] PROGMEM = "\nDEGREES UNIT:\t %s";
-const char infoStr11[] PROGMEM = "\nHYSTERESIS:\t %d.%d%s";
-const char infoStr12[] PROGMEM = "\nLIMIT:\t\t %d.%d%s\n\0";
+const char infoStr3[]  PROGMEM = "\nI2C COM STATUS:\t %sCONNECTED";
+const char infoStr4[]  PROGMEM = "\nCONFIG BYTE:\t B%d%d%d%d%d%d%d%d";
+const char infoStr5[]  PROGMEM = "\nDEVICE MODE:\t %s";
+const char infoStr6[]  PROGMEM = "\nALERT TYPE:\t %s";
+const char infoStr7[]  PROGMEM = "\nALERT MODE:\t ACTIVE-%s";
+const char infoStr8[]  PROGMEM = "\nFAULT-QUEUE:\t %d FAULT%s";
+const char infoStr9[]  PROGMEM = "\nRESOLUTION:\t %d-BIT";
+const char infoStr10[] PROGMEM = "\nCONVERSION MODE: %s";
+const char infoStr11[] PROGMEM = "\nDEGREES UNIT:\t %s";
+const char infoStr12[] PROGMEM = "\nHYSTERESIS:\t %d.%d%s";
+const char infoStr13[] PROGMEM = "\nLIMIT:\t\t %d.%d%s\n";
+const char errStr[]    PROGMEM = "\nI2C ERROR:\t ";
 
-const char * const infoCodes[NUM_OF_INFO_STR] PROGMEM = {
+const char * const infoStrs[NUM_OF_INFO_STR] PROGMEM = {
     infoStr0,
     infoStr1,
     infoStr2,
@@ -71,40 +78,58 @@ const char * const infoCodes[NUM_OF_INFO_STR] PROGMEM = {
     infoStr9,
     infoStr10,
     infoStr11,
-    infoStr12
+    infoStr12,
+    infoStr13,
+    errStr
 };
 
 /*==============================================================================================================*
-    GET DEVICE INFORMATION (PRINTABLE FORMAT)
+    GENERATE DEVICE INFORMATION STRING (PRINTABLE FORMAT)
  *==============================================================================================================*/
 
-String MCP9802InfoStr(const MCP9802& devParams) {
-    String resultStr = "";
-    char devInfoBuffer[INFO_BUFFER_SIZE];
-    int  devAddr   = devParams._devAddr;
-    byte tempUnit  = devParams._tempUnit;
+PString MCP9802InfoStr(const MCP9802& devParams) {
+    char * ptr;
+    char strBuffer[338];
+    int  devAddr = devParams._devAddr;
     MCP9802 mcp9802(devAddr);
+    byte comErrCode = mcp9802.ping();
+    PString resultStr(strBuffer, sizeof(strBuffer));
+    char devInfoBuffer[INFO_BUFFER_SIZE];
+    byte tempUnit = devParams._tempUnit;
     mcp9802.setTempUnit(tempUnit ? FAHRENHEIT : CELSIUS);
-    byte  config   = devParams._singleConfig ? devParams._singleConfig : mcp9802.getConfig();
-    byte  fqVal    = (config & 0x18) >> 2;
-    float hyst     = mcp9802.getHyst();
-    float limit    = mcp9802.getLimit();
-    for (byte i=0; i<NUM_OF_INFO_STR; i++) {
-        char * ptr = (char *) pgm_read_word(&infoCodes[i]);
+    byte  config = devParams._singleConfig ? devParams._singleConfig : mcp9802.getConfig();
+    byte  fqVal = (config & 0x18) >> 2;
+    float hyst = mcp9802.getHyst();
+    float limit = mcp9802.getLimit();
+    for (byte i=0; i<4; i++) {
+        ptr = (char *) pgm_read_word(&infoStrs[i]);
         if (i < 2)   snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr);
         if (i == 2)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, devAddr, devAddr);
-        if (i == 3)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config >> 7)&1, (config >> 6)&1, (config >> 5)&1,
-                         (config >> 4)&1, (config >> 3)&1, (config >> 2)&1, (config >> 1)&1, config&1);
-        if (i == 4)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config ? "STANDBY" : "ON"));
-        if (i == 5)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, ((config >> 1)&1 ? "INTERRUPT": "COMPARATOR"));
-        if (i == 6)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, ((config >> 2)&1 ? "HIGH": "LOW"));
-        if (i == 7)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (fqVal ? fqVal : 1), (fqVal ? "S" : ""));
-        if (i == 8)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (((config & 0x60) >> 5) + 9));
-        if (i == 9)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config ? "SINGLE-SHOT" : "CONTINUOUS"));
-        if (i == 10) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (tempUnit ? "FAHRENHEIT" : "CELSIUS"));
-        if (i == 11) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)hyst, abs((int)(hyst * 10) % 10), (tempUnit ? "F" : "C"));
-        if (i == 12) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)limit, abs((int)(limit * 10) % 10), (tempUnit ? "F" : "C"));
-        resultStr += String(devInfoBuffer);
+        if (i == 3)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (comErrCode ? "NOT " : ""));
+        resultStr += devInfoBuffer;
+    }
+    if (!comErrCode) {
+        for (byte i=4; i<(NUM_OF_INFO_STR - 1); i++) {
+            ptr = (char *) pgm_read_word(&infoStrs[i]);
+            if (i == 4)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config >> 7)&1, (config >> 6)&1, (config >> 5)&1,
+                             (config >> 4)&1, (config >> 3)&1, (config >> 2)&1, (config >> 1)&1, config&1);
+            if (i == 5)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config ? "STANDBY" : "ON"));
+            if (i == 6)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, ((config >> 1)&1 ? "INTERRUPT": "COMPARATOR"));
+            if (i == 7)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, ((config >> 2)&1 ? "HIGH": "LOW"));
+            if (i == 8)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (fqVal ? fqVal : 1), (fqVal ? "S" : ""));
+            if (i == 9)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (((config & 0x60) >> 5) + 9));
+            if (i == 10) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config ? "SINGLE-SHOT" : "CONTINUOUS"));
+            if (i == 11) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (tempUnit ? "FAHRENHEIT" : "CELSIUS"));
+            if (i == 12) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)hyst, abs((int)(hyst * 10) % 10), (tempUnit ? "F" : "C"));
+            if (i == 13) snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (int)limit, abs((int)(limit * 10) % 10), (tempUnit ? "F" : "C"));
+            resultStr += devInfoBuffer;
+        }
+    } else {
+        snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, (char *) pgm_read_word(&infoStrs[14]));
+        resultStr += devInfoBuffer;
+        snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, (char *) pgm_read_word(&comCodes[comErrCode]));
+        resultStr += devInfoBuffer;
+        resultStr += "\n";
     }
     return resultStr;
 }

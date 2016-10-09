@@ -11,6 +11,10 @@
                  (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value
                  rather than do nothing (4.10.16)
     Ver. 1.2.0 - Changed license to MIT (5.10.16)
+    Ver. 1.3.0 - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class
+                 instead of the String class to further reduce memory footprint. For this purpose, added PString.h
+                 PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED)
+                 field to device information string (9.10.16)
 
 *===============================================================================================================*
     LICENSE
@@ -44,14 +48,14 @@
 const byte COM_BUFFER_SIZE  = 60;
 const int  NUM_OF_COM_CODES =  8;
 
-const char comMsg0[] PROGMEM = "Success\0";
-const char comMsg1[] PROGMEM = "Error Code #1: I2C Buffer overflow\0";
-const char comMsg2[] PROGMEM = "Error Code #2: Address sent, NACK received\0";
-const char comMsg3[] PROGMEM = "Error Code #3: Data send, NACK received\0";
-const char comMsg4[] PROGMEM = "Error Code #4: Other error (bus error, etc.)\0";
-const char comMsg5[] PROGMEM = "Error Code #5: Timed-out while trying to become Bus Master\0";
-const char comMsg6[] PROGMEM = "Error Code #6: Timed-out while waiting for data to be sent\0";
-const char comMsgDefault[] PROGMEM = "Error Code #%d: Unlisted error\0";
+const char comMsg0[] PROGMEM = "Success";
+const char comMsg1[] PROGMEM = "Error Code #1: I2C Buffer overflow";
+const char comMsg2[] PROGMEM = "Error Code #2: Address sent, NACK received";
+const char comMsg3[] PROGMEM = "Error Code #3: Data send, NACK received";
+const char comMsg4[] PROGMEM = "Error Code #4: Other error (bus error, etc.)";
+const char comMsg5[] PROGMEM = "Error Code #5: Timed-out while trying to become Bus Master";
+const char comMsg6[] PROGMEM = "Error Code #6: Timed-out while waiting for data to be sent";
+const char comMsgDefault[] PROGMEM = "Error Code #%d: Unlisted error";
 
 const char * const comCodes[NUM_OF_COM_CODES] PROGMEM = {
         comMsg0,
@@ -68,12 +72,13 @@ const char * const comCodes[NUM_OF_COM_CODES] PROGMEM = {
     GET I2C COMMUNICATIONS RESULT MESSAGE (PRINTABLE FORMAT)
  *==============================================================================================================*/
 
-String MCP9802ComStr(const MCP9802& devParams) {
+PString MCP9802ComStr(const MCP9802& devParams) {
     char devComBuffer[COM_BUFFER_SIZE];
+    PString comStr(devComBuffer, COM_BUFFER_SIZE);
     char comCodeResult = devParams._comBuffer;
     char * ptr = (char *) pgm_read_word(&comCodes[comCodeResult]);
     snprintf_P(devComBuffer, COM_BUFFER_SIZE, ptr, comCodeResult);
-    return String(devComBuffer);
+    return comStr;
 }
 
 #endif
