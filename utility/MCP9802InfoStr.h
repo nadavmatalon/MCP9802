@@ -36,9 +36,6 @@
  
 *==============================================================================================================*/
 
-// Sketch uses 9,460 bytes (29%) of program storage space. Maximum is 32,256 bytes.
-// Global variables use 524 bytes (25%) of dynamic memory, leaving 1,524 bytes for local variables. Maximum is 2,048 bytes.
-
 #ifndef MCP9802InfoStr_h
 #define MCP9802InfoStr_h
 
