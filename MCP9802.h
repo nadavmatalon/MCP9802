@@ -145,6 +145,8 @@
 #if defined(ARDUINO_ARCH_AVR)
     #include <Arduino.h>
     #include <WSWire.h>
+    #include "utility/PString.h"
+
 #else
     #error “The MCP9802 library only supports AVR processors.”
 #endif
@@ -241,8 +243,8 @@ class MCP9802 {
         float  convertCtoF(float valC);
         float  convertFtoC(float valF);
         float  roundToHalfDegC(float valC);
-        friend String MCP9802ComStr(const MCP9802&);
-        friend String MCP9802InfoStr(const MCP9802&);
+        friend PString MCP9802ComStr(const MCP9802&);
+        friend PString MCP9802InfoStr(const MCP9802&);
 };
 
 #endif
