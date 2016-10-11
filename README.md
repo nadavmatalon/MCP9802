@@ -142,13 +142,15 @@ All 'get' methods return some sort of value (e.g. temp reading, hysteresis setti
 __ping();__                                  
 Parameters:&nbsp;&nbsp;&nbsp;None  
 Description:&nbsp;&nbsp;&nbsp;Searches for the MCP9802 at the pre-defined I2C Bus address &amp; returns byte with the relevant success/error code, as follows:  
-0 ... Success (no error)  
-1 ... Buffer overflow  
-2 ... Address sent, NACK received  
-3 ... Data send, NACK received  
-4 ... Other error (lost bus arbitration, bus error, etc.)  
-5 ... Timed-out while trying to become Bus Master  
-6 ... Timed-out while waiting for data to be sent<br>
+0  ... Success (no error)  
+1  ... Buffer overflow  
+2  ... Address sent, NACK received  
+3  ... Data send, NACK received  
+4  ... Other error (lost bus arbitration, bus error, etc.)  
+5  ... Timed-out while trying to become Bus Master  
+6  ... Timed-out while waiting for data to be sent
+>6 ... Unlisted error (potential future implementation/s)<br>
+
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte  
 
 __getTemp();__  
