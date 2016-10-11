@@ -44,13 +44,13 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 * __PIN 1 (VCC)__ - Connect VCC to the Arduino's 5V output
 * __PIN 2 (GND)__ - Connect GND to the Arduino's GND
 * __PIN 3 (ALERT)__ - Connect ALERT to the Arduino's Digital Pin 2
-* __PIN 4 (SCL)__ - Conntect SCL to the Arduino's PIN A5 with a 2K2 pull-up resistor
-* __PIN 5 (SDA)__ - Conntect SDA to the Arduino's PIN A4 with a 2K2 pull-up resistor
-* __DECOUPING__: Connect a 0.1uF Ceramic Capacitor between the MCP9802's VCC & GND PINS
+* __PIN 4 (SCL)__ - Connect SCL to the Arduino's PIN A5 with a 2K2 pull-up resistor
+* __PIN 5 (SDA)__ - Connect SDA to the Arduino's PIN A4 with a 2K2 pull-up resistor
+* __DECOUPING__: Connect a 0.1uF Ceramic Capacitor between the MCP9802's VCC &amp GND PINS
 
 ## GENERAL NOTES
 
-__1. I2C Communications Library__
+1) __I2C Communications Library__
 
 This library uses the '[WSWire](https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire)' library for I2C communication between the contoller IC (Master) and the MCP9802 (Slave), so it is __NECESSARY__ to have it installed prior to using the current libraty. 
 
@@ -90,11 +90,11 @@ The MCP9802's Alert functionality is based on an 'open collector' architecture w
 
 8) __Device Information String__
 
-It is now possible to extend the MCP9802 Library to include a function for generating a pritable device information string showing all the relevant details about the devices current Configuration, Limit & Hysteresis settings. As the additional functionality comes at the cost of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_Info](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_Info/MCP9802_Info.ino) example sketch for detailed explanation and an actual usage demo.
+It is now possible to extend the MCP9802 Library to include a function for generating a pritable device information string showing all the relevant details about the devices current Configuration, Limit & Hysteresis settings. As the additional functionality comes at the cost of increased memory footprint, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_Info](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_Info/MCP9802_Info.ino) example sketch for detailed explanation and an actual usage demo.
 
 9) __Device I2C Communications String__
 
-It is now possible to also extend the MCP9802 Library to include a function for generating a pritable I2C Communications string showing the result of each I2C transaction in a human-friendly way, something that may be useful, for example, during debugging sessions. As the additional functionality comes at the cost of increased memory usage, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_I2C_Status](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_I2C_Status/MCP9802_I2C_Status.ino) example sketch for detailed explanation and an actual usage demo.
+It is now possible to also extend the MCP9802 Library to include a function for generating a pritable I2C Communications string showing the result of each I2C transaction in a human-friendly way, something that may be useful, for example, during debugging sessions. As the additional functionality comes at the cost of increased memory footprint, it was implemented as an optional add-on rather than added directly to the core MCP9802 Library. See the [MCP9802_I2C_Status](https://github.com/nadavmatalon/MCP9802/blob/master/examples/MCP9802_I2C_Status/MCP9802_I2C_Status.ino) example sketch for detailed explanation and an actual usage demo.
 
 
 ## I2C ADDRESSES
@@ -129,14 +129,12 @@ At this point you can construct a new MPC9802 object(s) by using the following c
 MCP9802 device_name(device_address);
 ```
 
->__NOTE__: replace the '__device_name__' above with a name of your choice. Also, make sure to replace the variable '__device_address__' with 
-the specific I2C address of your device - see I2C ADDRESSES section above.
+>__NOTE__: replace the '__device_name__' above with a name of your choice. Also, make sure to replace the variable '__device_address__' with the specific I2C address of your device - see I2C ADDRESSES section above.
 
 
 ## LIBRARY METHODS
 
-With the library installed & included in the sketch, and an MCP9802 object initiallized, the following functions are available 
-(see the usage example sketch for a detailed implementation):
+With the library installed & included in the sketch, and an MCP9802 object initiallized, the following functions are available (see the usage example sketch for a detailed implementation):
 
 __Note About Methods' Return Values:__  
 All 'get' methods return some sort of value (e.g. temp reading, hysteresis setting, etc.), while all 'set' methods return nothing. Nevertheless, ALL methods implicitly update the library's __I2C _comBuffer__ (=communication buffer) after each I2C transmission. The reason for this functional design is to maintain structural coherance between the 'get' and 'set' methods. As 'get' methods cannot return both the desired value and the I2C transmission's result simultaniously. Consequently, if the relevant value hasn't been obtained by a particular 'get' method, the user can simply check the content of the _comBuffer to see what error occured. Similarly, it is possible to check if a particular setting has been successfully applied via a 'set' method either by preforming the corresponding 'get' method - e.g. getHystC() after using setHystC() - or by checking the content of the _comBuffer (0 indicates a successful transmission, 1-6 indicate an error as listed below). 
@@ -268,7 +266,7 @@ Description:&nbsp;&nbsp;Returns the latest I2C Communication result code (see Su
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte
 
 __Destructor__  
-If you want to destruct an existing MCP9802 object, you can use the following method to do so:
+If you want to destruct an instantiated MCP9802 object, you can use the following method to do so:
 
 ```
 ~MCP9802 device_name();
@@ -293,8 +291,7 @@ Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PString
 
 1) Hook-up the MCP9802 to the Arduino as explained above.   
 2) Upload the relevant example sketch to the Arduino.  
-3) Open the Serial Communications Window \(make sure the baud-rate is set to 9600 or change it in the sketch to match your Serial Port's buad-rate\).  
-
+3) Open the Serial Communications Window (make sure the baud-rate is set to 9600 or change it in the sketch to match your Serial Port's buad-rate).  
 
 ## BUG REPORTS
 
@@ -303,8 +300,6 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 ## TODO
 
 - __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit  
-- __DEVICE INFORMATION STRING__: Replace use String class with string class or other alternative (?)
-- __COMMUNICATION STATUS RESULT STRING__: Replace use String class with string class or other alternative (?)
 
 ## VERSION HISTORY
 
@@ -312,7 +307,6 @@ __Ver. 1.0.0__ - First release (26.9.16)
 __Ver. 1.1.0__ - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value rather than do nothing (4.10.16)  
 __Ver. 1.2.0__ - Changed license to MIT (5.10.16)  
 __Ver. 1.3.0__ - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class instead of the String class to further reduce memory footprint. For this purpose, added PString.h & PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) field to device information string (9.10.16)
-
 
 ## LICENSE
 

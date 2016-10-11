@@ -4,7 +4,7 @@
     @author   Nadav Matalon
     @license  MIT (c) 2016 Nadav Matalon
  
-    A complemetary Device Information String Generator Debugging Function for the MCP9802
+    A complemetary Device Information String Generator Debugging Function for the MCP9802 Library
  
     Ver. 1.0.0 - First release (26.9.16)
     Ver. 1.1.0 - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range
