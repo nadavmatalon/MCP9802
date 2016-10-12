@@ -84,7 +84,7 @@ const char * const infoStrs[NUM_OF_INFO_STR] PROGMEM = {
 };
 
 /*==============================================================================================================*
- GENERATE DEVICE INFORMATION STRING (PRINTABLE FORMAT)
+    GENERATE DEVICE INFORMATION STRING (PRINTABLE FORMAT)
  *==============================================================================================================*/
 
 PString MCP9802InfoStr(const MCP9802& devParams) {
