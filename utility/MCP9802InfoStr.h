@@ -1,44 +1,44 @@
 /*==============================================================================================================*
-
-    @file     MCP9802InfoStr.h
-    @author   Nadav Matalon
-    @license  MIT (c) 2016 Nadav Matalon
  
-    A complemetary Device Information String Generator Debugging Function for the MCP9802 Library
+     @file     MCP9802InfoStr.h
+     @author   Nadav Matalon
+     @license  MIT (c) 2016 Nadav Matalon
+     
+     A complemetary Device Information String Generator Debugging Function for the MCP9802 Library
+     
+     Ver. 1.0.0 - First release (26.9.16)
+     Ver. 1.1.0 - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range
+                  (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value
+                  rather than do nothing (4.10.16)
+     Ver. 1.2.0 - Changed license to MIT (5.10.16)
+     Ver. 1.3.0 - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class
+                  instead of the String class to further reduce memory footprint. To this end, added PString.h and
+                  PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED)
+                  field to device information string (9.10.16)
  
-    Ver. 1.0.0 - First release (26.9.16)
-    Ver. 1.1.0 - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range
-         (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value
-         rather than do nothing (4.10.16)
-    Ver. 1.2.0 - Changed license to MIT (5.10.16)
-    Ver. 1.3.0 - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class
-                 instead of the String class to further reduce memory footprint. For this purpose, added PString.h
-                 PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED)
-                 field to device information string (9.10.16)
- 
-*===============================================================================================================*
+ *===============================================================================================================*
     LICENSE
-*===============================================================================================================*
+ *===============================================================================================================*
  
-    The MIT License (MIT)
-    Copyright (c) 2016 Nadav Matalon
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-    documentation files (the "Software"), to deal in the Software without restriction, including without
-    limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-    the Software, and to permit persons to whom the Software is furnished to do so, subject to the following
-    conditions:
-
-    The above copyright notice and this permission notice shall be included in all copies or substantial
-    portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
-    LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     The MIT License (MIT)
+     Copyright (c) 2016 Nadav Matalon
+     
+     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+     documentation files (the "Software"), to deal in the Software without restriction, including without
+     limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+     the Software, and to permit persons to whom the Software is furnished to do so, subject to the following
+     conditions:
+     
+     The above copyright notice and this permission notice shall be included in all copies or substantial
+     portions of the Software.
+     
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+     LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
-*==============================================================================================================*/
+ *==============================================================================================================*/
 
 #ifndef MCP9802InfoStr_h
 #define MCP9802InfoStr_h
@@ -84,7 +84,7 @@ const char * const infoStrs[NUM_OF_INFO_STR] PROGMEM = {
 };
 
 /*==============================================================================================================*
-    GENERATE DEVICE INFORMATION STRING (PRINTABLE FORMAT)
+ GENERATE DEVICE INFORMATION STRING (PRINTABLE FORMAT)
  *==============================================================================================================*/
 
 PString MCP9802InfoStr(const MCP9802& devParams) {
@@ -112,7 +112,7 @@ PString MCP9802InfoStr(const MCP9802& devParams) {
         for (byte i=4; i<(NUM_OF_INFO_STR - 1); i++) {
             ptr = (char *) pgm_read_word(&infoStrs[i]);
             if (i == 4)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config >> 7)&1, (config >> 6)&1, (config >> 5)&1,
-                             (config >> 4)&1, (config >> 3)&1, (config >> 2)&1, (config >> 1)&1, config&1);
+                            (config >> 4)&1, (config >> 3)&1, (config >> 2)&1, (config >> 1)&1, config&1);
             if (i == 5)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, (config ? "STANDBY" : "ON"));
             if (i == 6)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, ((config >> 1)&1 ? "INTERRUPT": "COMPARATOR"));
             if (i == 7)  snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, ptr, ((config >> 2)&1 ? "HIGH": "LOW"));

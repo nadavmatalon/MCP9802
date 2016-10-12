@@ -12,7 +12,7 @@
                  rather than do nothing (4.10.16)
     Ver. 1.2.0 - Changed license to MIT (5.10.16)
     Ver. 1.3.0 - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class
-                 instead of the String class to further reduce memory footprint. For this purpose, added PString.h
+                 instead of the String class to further reduce memory footprint. To this end, added PString.h and
                  PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) 
                  field to device information string (9.10.16)
 
@@ -59,8 +59,10 @@ MCP9802::MCP9802(int devAddr) {
 MCP9802::~MCP9802() {}
 
 /*==============================================================================================================*
-    PING
+    PING (0 = SUCCESS / 1-7 = ERROR CODE)
  *==============================================================================================================*/
+
+// See explication of error code numbers in the README)
 
 byte MCP9802::ping() {
     Wire.beginTransmission(_devAddr);
