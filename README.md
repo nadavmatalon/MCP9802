@@ -301,6 +301,8 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 
 ## TODO
 
+* __CORE LIBRARY__: re-write getData() function to include Continuous and Single-Shot Modes and remove singleCon() function
+* __CORE LIBRARY__: Change setX() functions to work with masks (?)
 * __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit   
 * __CORE LIBRARY__: Add running average functionality  
 * __MCP9802ComStr__: Move to independent Library  
