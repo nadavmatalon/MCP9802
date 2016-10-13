@@ -301,7 +301,9 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 
 ## TODO
 
-- __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit  
+* __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit   
+* __CORE LIBRARY__: Add running average functionality  
+* __MCP9802ComStr__: Move to independent Library  
 
 ## VERSION HISTORY
 
