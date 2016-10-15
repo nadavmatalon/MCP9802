@@ -85,7 +85,7 @@ void setup() {
     Wire.begin();
     while(!Serial);
     Serial.print(F("\n\nCURRENT SETTINGS:\n"));
-    Serial.print(MCP9802InfoStr(mcp9802));
+    Serial.print(Mcp9802_InfoStr::MCP9802InfoStr(mcp9802));
     Serial.print(F("\nCHANGING TO NEW SETTINGS..."));
     mcp9802.setHyst(-50.7);
     mcp9802.setLimit(-52.2);
@@ -96,11 +96,11 @@ void setup() {
     mcp9802.setConMode(SINGLE);
     mcp9802.setTempUnit(FAHRENHEIT);
     Serial.print(F("DONE\n"));
-    Serial.print(MCP9802InfoStr(mcp9802));
+    Serial.print(Mcp9802_InfoStr::MCP9802InfoStr(mcp9802));
     Serial.print(F("\nRESETTING DEVICE..."));
     mcp9802.reset();
     Serial.print(F("DONE\n"));
-    Serial.print(MCP9802InfoStr(mcp9802));  
+    Serial.print(Mcp9802_InfoStr::MCP9802InfoStr(mcp9802));  
     Serial.print(F("\n\n"));
 }
 

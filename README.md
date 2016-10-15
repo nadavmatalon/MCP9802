@@ -25,8 +25,8 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 - **/utility** -  
   - **MCP9802InfoStr.h** - Header file containing a functional extention of the library to include generating pritable information String (see Note #9 below).
   - **MCP9802ComStr.h** - Header file containing a functional extention of the library to include generating a pritable I2C Communication Result String (see Note #10 below).
-  - **PString.h** - Header file for PString class (lighter alternative to String class) 
-  - **PString.cpp** - Compilation file for PString class (lighter alternative to String class) 
+  - **MCP9802_PString.h** - Header file for PString class (lighter alternative to String class) 
+  - **MCP9802_PString.cpp** - Compilation file for PString class (lighter alternative to String class) 
 - **/examples** -   
   - **/MCP9802_Test/MCP9802_Test.ino** - A basic sketch for testing whether the MCP9802 is hooked-up and operating correctly.
   - **MCP9802_Usage/MCP9802_Usage.ino** - A much more extensive sketch offering a complete usage illustration, as well as a rubust testing mechanism.
@@ -279,12 +279,12 @@ If you want to destruct an instantiated MCP9802 object, you can use the followin
 
 (* requires an additional '\#include' of the relevant *.h file as shown in the corresponding example sketches)
 
-__MCP9802ComStr();__  
+__Mcp9802_ComStr::MCP9802ComStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
 Description:&nbsp;&nbsp;Returns printable string containing human-friendly information about the device's latest I2C communication result  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PString
 
-__MCP9802InfoStr();__  
+__Mcp9802_InfoStr::MCP9802InfoStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
 Description:&nbsp;&nbsp;Returns printable string containing detailed information about the device's current settings   
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PString
@@ -314,6 +314,7 @@ __Ver. 1.0.0__ - First release (26.9.16)
 __Ver. 1.1.0__ - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value rather than do nothing (4.10.16)  
 __Ver. 1.2.0__ - Changed license to MIT (5.10.16)  
 __Ver. 1.3.0__ - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class instead of the String class to further reduce memory footprint. For this purpose, added PString.h & PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) field to device information string (9.10.16)
+__Ver. 1.4.0__ - Added namespaces to prevent conflicts with other libraries (15.10.16)  
 
 ## LICENSE
 

@@ -88,7 +88,7 @@ void setup() {
     Serial.print(F("\n\nCURRENT TEMP:\t"));
     Serial.print(mcp9802.getTemp(), 1);
     Serial.print(F("C\n\nI2C STATUS:\t"));
-    Serial.print(MCP9802ComStr(mcp9802));
+    Serial.print(Mcp9802_ComStr::MCP9802ComStr(mcp9802));
     Serial.print(F("\n\n"));
 }
 

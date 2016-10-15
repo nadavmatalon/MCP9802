@@ -16,6 +16,8 @@
                  PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) 
                  field to device information string (9.10.16)
 
+    Ver. 1.4.0 - Added namespaces to prevent conflicts with other libraries (15.10.16)
+
  *==============================================================================================================*
     LICENSE
  *==============================================================================================================*
@@ -39,6 +41,10 @@
      SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
  *==============================================================================================================*/
+
+#if 1
+__asm volatile ("nop");
+#endif
 
 #include "MCP9802.h"
 
