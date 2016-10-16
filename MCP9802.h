@@ -152,7 +152,7 @@ __asm volatile ("nop");
 #define MCP9802_h
 
 #if !defined(ARDUINO_ARCH_AVR)
-    #error “The ADS1110 library only supports AVR processors.”
+    #error “The MCP9802 library only supports AVR processors.”
 #endif
 
 #include <Arduino.h>
