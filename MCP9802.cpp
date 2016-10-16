@@ -68,7 +68,7 @@ MCP9802::~MCP9802() {}
     PING (0 = SUCCESS / 1-7 = ERROR CODE)
  *==============================================================================================================*/
 
-// See explication of error code numbers in the README)
+// See explication of error code numbers in the README
 
 byte MCP9802::ping() {
     Wire.beginTransmission(_devAddr);
