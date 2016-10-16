@@ -50,7 +50,7 @@ __asm volatile ("nop");
 
 #include <avr/pgmspace.h>
 
-namespace Mcp9802_ComStr {
+namespace Mcp9802 {
 
     const byte COM_BUFFER_SIZE  = 60;
     const int  NUM_OF_COM_CODES =  8;
@@ -90,6 +90,6 @@ namespace Mcp9802_ComStr {
 
 }
 
-using namespace Mcp9802_ComStr;
+using namespace Mcp9802;
 
 #endif

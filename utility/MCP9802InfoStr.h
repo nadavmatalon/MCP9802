@@ -51,7 +51,7 @@ __asm volatile ("nop");
 #include <avr/pgmspace.h>
 #include "utility/MCP9802ComStr.h"
 
-namespace Mcp9802_InfoStr {
+namespace Mcp9802 {
 
     const int  INFO_BUFFER_SIZE = 60;
     const byte NUM_OF_INFO_STR  = 15;
@@ -134,7 +134,7 @@ namespace Mcp9802_InfoStr {
         } else {
             snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, (char *) pgm_read_word(&infoStrs[14]));
             resultStr += devInfoBuffer;
-            snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, (char *) pgm_read_word(&Mcp9802_ComStr::comCodes[comErrCode]));
+            snprintf_P(devInfoBuffer, INFO_BUFFER_SIZE, (char *) pgm_read_word(&comCodes[comErrCode]));
             resultStr += devInfoBuffer;
             resultStr += "\n";
         }
@@ -143,6 +143,6 @@ namespace Mcp9802_InfoStr {
 
 }
 
-using namespace Mcp9802_InfoStr;
+using namespace Mcp9802;
 
 #endif

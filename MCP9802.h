@@ -239,7 +239,7 @@ namespace Mcp9802 {
             void   setHyst(float newHyst);
             void   setLimit(float newLimit);
             void   reset();
-//        private:
+        private:
             int    _devAddr;
             byte   _tempUnit;
             byte   _comBuffer;
