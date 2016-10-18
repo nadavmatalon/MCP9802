@@ -15,7 +15,6 @@
                  instead of the String class to further reduce memory footprint. To this end, added PString.h and
                  PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) 
                  field to device information string (9.10.16)
-
     Ver. 1.4.0 - Added namespaces to prevent conflicts with other libraries (15.10.16)
 
  *==============================================================================================================*
@@ -53,9 +52,10 @@ __asm volatile ("nop");
  *==============================================================================================================*/
 
 MCP9802::MCP9802(int devAddr) {
-    _devAddr        = devAddr;
-    _tempUnit       = CELSIUS;
-    _singleConfig   = DEFAULT_CONFIG;
+    _devAddr      = devAddr;
+    _tempUnit     = CELSIUS;
+    _comBuffer    = COM_SUCCESS;
+    _singleConfig = DEFAULT_CONFIG;
 }
 
 /*==============================================================================================================*
