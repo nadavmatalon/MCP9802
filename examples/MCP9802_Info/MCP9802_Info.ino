@@ -76,16 +76,16 @@
 #include "MCP9802.h"
 #include "utility/MCP9802InfoStr.h"
 
-const int MCP9802_ADDR = 0x48;                       // I2C address of the MCP9802 (Change as needed)
+const byte DEV_ADDR = 0x48;                       // I2C address of the MCP9802 (Change as needed)
 
-MCP9802 mcp9802(MCP9802_ADDR);
+MCP9802 mcp9802(DEV_ADDR);
 
 void setup() {
     Serial.begin(9600);
     Wire.begin();
     while(!Serial);
     Serial.print(F("\n\nCURRENT SETTINGS:\n"));
-    Serial.print(Mcp9802_InfoStr::MCP9802InfoStr(mcp9802));
+    Serial.print(MCP9802InfoStr(mcp9802));
     Serial.print(F("\nCHANGING TO NEW SETTINGS..."));
     mcp9802.setHyst(-50.7);
     mcp9802.setLimit(-52.2);
@@ -96,11 +96,11 @@ void setup() {
     mcp9802.setConMode(SINGLE);
     mcp9802.setTempUnit(FAHRENHEIT);
     Serial.print(F("DONE\n"));
-    Serial.print(Mcp9802_InfoStr::MCP9802InfoStr(mcp9802));
+    Serial.print(MCP9802InfoStr(mcp9802));
     Serial.print(F("\nRESETTING DEVICE..."));
     mcp9802.reset();
     Serial.print(F("DONE\n"));
-    Serial.print(Mcp9802_InfoStr::MCP9802InfoStr(mcp9802));  
+    Serial.print(MCP9802InfoStr(mcp9802));  
     Serial.print(F("\n\n"));
 }
 

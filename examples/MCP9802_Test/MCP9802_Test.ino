@@ -81,7 +81,7 @@
 
 #include "MCP9802.h"
 
-const int  MCP9802_ADDR = 0x48;                   // DEC: 72 - I2C address of the MCP9802 (Change as needed)
+const byte DEV_ADDR = 0x48;                       // DEC: 72 - I2C address of the MCP9802 (Change as needed)
 const byte PIN_D2 = 2;                            // Arduino Digital Pin PIN 2 (connected to the MCP9802 ALERT Pin)
 float temp, limit, hyst;                          // Containers for register data
 
@@ -90,7 +90,7 @@ typedef enum:byte {
     ON  = 1
 } alert_state_t;
 
-MCP9802 mcp9802(MCP9802_ADDR);
+MCP9802 mcp9802(DEV_ADDR);
 
 void setup() {
     pinMode(PIN_D2, INPUT_PULLUP);

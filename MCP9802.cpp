@@ -51,7 +51,7 @@ __asm volatile ("nop");
     CONSTRUCTOR
  *==============================================================================================================*/
 
-MCP9802::MCP9802(int devAddr) {
+MCP9802::MCP9802(byte devAddr) {
     _devAddr      = devAddr;
     _tempUnit     = CELSIUS;
     _comBuffer    = COM_SUCCESS;

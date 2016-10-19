@@ -164,8 +164,8 @@ namespace Mcp9802 {
     const byte  DEFAULT_CONFIG   =   0;          // Configuration Register Default Settings for 'Continuous' conversion mode (0x00)
     const int   DEFAULT_HYST     =  75;          // Hysteresis Register Default Settings in degrees Celsius (0x9600)
     const int   DEFAULT_LIMIT    =  80;          // Limit Register Default Settings in degrees Celsius (0xA000)
-    const int   CONFIG_BYTE      =   1;          // Number of Configuration Register Bytes (CONFIG)
-    const int   DATA_BYTES       =   2;          // Number of Data Register Bytes (TEMP, HYST, LIMIT)
+    const byte  CONFIG_BYTE      =   1;          // Number of Configuration Register Bytes (CONFIG)
+    const byte  DATA_BYTES       =   2;          // Number of Data Register Bytes (TEMP, HYST, LIMIT)
     const byte  INIT_SINGLE_SHOT = 129;          // Initiates a single conversion in 'Single-Shot' mode (0x81)
     const byte  MIN_CON_TIME     =  30;          // 30ms - Minimal Conversion Time (based on 9-BIT Resolution)
     const byte  COM_SUCCESS      =   0;          // I2C Communication Success (No Error)
@@ -216,7 +216,7 @@ namespace Mcp9802 {
 
     class MCP9802 {
         public:
-            MCP9802(int devAddr);
+            MCP9802(byte devAddr);
             ~MCP9802();
             byte   ping();
             byte   getAlertType();
@@ -240,7 +240,7 @@ namespace Mcp9802 {
             void   setLimit(float newLimit);
             void   reset();
         private:
-            int    _devAddr;
+            byte   _devAddr;
             byte   _tempUnit;
             byte   _comBuffer;
             byte   _singleConfig;
