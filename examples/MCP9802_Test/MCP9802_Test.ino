@@ -81,7 +81,7 @@
 
 #include "MCP9802.h"
 
-const int  MCP9802_ADDR = 0x48;                   // DEC: 72 - I2C address of the MCP9802 (Change as needed)
+const byte DEV_ADDR = 0x48;                       // DEC: 72 - I2C address of the MCP9802 (Change as needed)
 const byte PIN_D2 = 2;                            // Arduino Digital Pin PIN 2 (connected to the MCP9802 ALERT Pin)
 float temp, limit, hyst;                          // Containers for register data
 
@@ -90,7 +90,7 @@ typedef enum:byte {
     ON  = 1
 } alert_state_t;
 
-MCP9802 MCP9802(MCP9802_ADDR);
+MCP9802 mcp9802(DEV_ADDR);
 
 void setup() {
     pinMode(PIN_D2, INPUT_PULLUP);
@@ -104,7 +104,7 @@ void setup() {
     Serial.print(F("\nSerial Port is "));
     Serial.print(Serial ? "Open\n" : "Could not be opened\n"); 
     printDivider();
-    MCP9802.reset();
+    mcp9802.reset();
     quickDelay();
     Serial.print(F("\nINITIALIZING TESTS\n"));
     runTests();
@@ -120,7 +120,7 @@ void runTests() {
 
 void testPingDevice() {
     Serial.print(F("\nSearching for device...Device "));
-    MCP9802.ping() ? Serial.print(F("Not Found\n")) : Serial.print(F("Found!\n"));
+    mcp9802.ping() ? Serial.print(F("Not Found\n")) : Serial.print(F("Found!\n"));
     printDivider(); 
     quickDelay();
 }
@@ -134,14 +134,14 @@ void testGetConditions() {
 
 void testGetTemp() {
      Serial.print(F("\nCURRENT TEMP:\t\t"));
-     temp = MCP9802.getTemp();
+     temp = mcp9802.getTemp();
      Serial.print(temp, 1);
      Serial.print(F("C\n"));
 }
 
 void testGetLimit() {
      Serial.print(F("\nCURRENT LIMIT:\t\t"));
-     limit = MCP9802.getLimit();
+     limit = mcp9802.getLimit();
      Serial.print(limit, 1);
      Serial.print(F("C\n"));
      quickDelay();
@@ -149,7 +149,7 @@ void testGetLimit() {
 
 void testGetHyst() {    
      Serial.print(F("\nCURRENT HYST:\t\t"));
-     hyst = MCP9802.getHyst();
+     hyst = mcp9802.getHyst();
      Serial.print(hyst, 1);
      Serial.print(F("C\n"));
      quickDelay();
@@ -157,7 +157,7 @@ void testGetHyst() {
 
 void testGetAlertMode() {
      Serial.print(F("\nALERT MODE:\t\tACTIVE-"));
-     Serial.print(MCP9802.getAlertMode() ? "HIGH\n" : "LOW\n");
+     Serial.print(mcp9802.getAlertMode() ? "HIGH\n" : "LOW\n");
      quickDelay();
      printDivider(); 
 }
@@ -167,8 +167,8 @@ void testAlert() {
      testAlertState(OFF);
      printDivider(); 
      Serial.print(F("\nSimulating Alert Conditions..."));
-     MCP9802.setLimit(temp - 10);
-     MCP9802.setHyst(temp - 20);
+     mcp9802.setLimit(temp - 10);
+     mcp9802.setHyst(temp - 20);
      Serial.print(F("DONE\n"));
      Serial.print(F("\nCurrent Conditions:\n"));
      testGetConditions();
@@ -178,7 +178,7 @@ void testAlert() {
 
 void testSetAlertMode() {
     Serial.print(F("\nSetting Alert Mode to:\tACTIVE-HIGH..."));
-    MCP9802.setAlertMode(ACTIVE_HIGH);
+    mcp9802.setAlertMode(ACTIVE_HIGH);
     Serial.print(F("...DONE\n"));
     testGetAlertMode();
     quickDelay();

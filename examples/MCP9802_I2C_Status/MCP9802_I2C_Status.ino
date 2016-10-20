@@ -75,9 +75,9 @@
 #include "MCP9802.h"
 #include "utility/MCP9802ComStr.h"
 
-const int MCP9802_ADDR = 0x48;                            // I2C address of the MCP9802 (Change as needed)
+const byte DEV_ADDR = 0x48;                            // I2C address of the MCP9802 (Change as needed)
 
-MCP9802 mcp9802(MCP9802_ADDR);
+MCP9802 mcp9802(DEV_ADDR);
 
 void setup() {
     Serial.begin(9600);

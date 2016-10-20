@@ -15,6 +15,7 @@
                  instead of the String class to further reduce memory footprint. To this end, added PString.h and
                  PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) 
                  field to device information string (9.10.16)
+    Ver. 1.4.0 - Added namespaces to prevent conflicts with other libraries (15.10.16)
 
  *==============================================================================================================*
     LICENSE
@@ -40,16 +41,21 @@
  
  *==============================================================================================================*/
 
+#if 1
+__asm volatile ("nop");
+#endif
+
 #include "MCP9802.h"
 
 /*==============================================================================================================*
     CONSTRUCTOR
  *==============================================================================================================*/
 
-MCP9802::MCP9802(int devAddr) {
-    _devAddr        = devAddr;
-    _tempUnit       = CELSIUS;
-    _singleConfig   = DEFAULT_CONFIG;
+MCP9802::MCP9802(byte devAddr) {
+    _devAddr      = devAddr;
+    _tempUnit     = CELSIUS;
+    _comBuffer    = COM_SUCCESS;
+    _singleConfig = DEFAULT_CONFIG;
 }
 
 /*==============================================================================================================*
@@ -62,7 +68,7 @@ MCP9802::~MCP9802() {}
     PING (0 = SUCCESS / 1-7 = ERROR CODE)
  *==============================================================================================================*/
 
-// See explication of error code numbers in the README)
+// See explication of error code numbers in the README
 
 byte MCP9802::ping() {
     Wire.beginTransmission(_devAddr);
