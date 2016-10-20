@@ -313,7 +313,7 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 __Ver. 1.0.0__ - First release (26.9.16)  
 __Ver. 1.1.0__ - Small change in functionality: attempting to set hysteresis or limit beyond the legitimate range (-55°C - 125°C / -67°F - 257°F) now sets the register to the maximum/minumum allowable value rather than do nothing (4.10.16)  
 __Ver. 1.2.0__ - Changed license to MIT (5.10.16)  
-__Ver. 1.3.0__ - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class instead of the String class to further reduce memory footprint. For this purpose, added PString.h & PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) field to device information string (9.10.16)
+__Ver. 1.3.0__ - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class instead of the String class to further reduce memory footprint. For this purpose, added PString.h & PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) field to device information string (9.10.16)  
 __Ver. 1.4.0__ - Added namespaces to prevent conflicts with other libraries (15.10.16)  
 
 ## LICENSE
