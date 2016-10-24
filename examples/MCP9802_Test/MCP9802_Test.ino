@@ -10,9 +10,7 @@
   (Ambient Temperature, Limit, and Hysteresis). And finally, it verifies that the Alert functionality is working as it should (at least, 
   in default mode).
   
-  INPORTANT: The ADS1110 library depends on the Arduino IDE's native 'Wire' library for I2C communication between the Arduino (Master) and the MCP9802 (Slave),
-  so it is __necessary__ to have it installed prior to using the current libraty.
-
+  INPORTANT: The current library depends on the Arduino IDE's native 'Wire' library for I2C communication between the Arduino (Master) and the MCP9802 (Slave).
 
   WIRING DIAGRAM
   --------------
