@@ -1,9 +1,9 @@
 
-# MCP9802 AVR DRIVER LIBRARY
+# MCP9802 DRIVER
 
 [![Platform Badge](https://img.shields.io/badge/platform-Arduino-orange.svg)](https://www.arduino.cc/)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[![SemVer](https://img.shields.io/badge/SemVer-1.4.0-brightgreen.svg)](http://semver.org/)
+[![SemVer](https://img.shields.io/badge/SemVer-1.5.0-brightgreen.svg)](http://semver.org/)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![SemVer](https://img.shields.io/badge/eagle-pcb-yellow.svg)](https://cadsoft.io/)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -25,8 +25,8 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 - **MCP9802.h** - Library Header file.
 - **MCP9802.cpp** - Library Compilation.
 - **/utility** 
-  - **MCP9802InfoStr.h** - Header file containing a functional extention of the library to include generating pritable information String (see Note #9 below).
-  - **MCP9802ComStr.h** - Header file containing a functional extention of the library to include generating a pritable I2C Communication Result String (see Note #10 below).
+  - **MCP9802InfoStr.h** - Header file containing a functional extention of the library to include generating printable information String (see Note #8 below).
+  - **MCP9802ComStr.h** - Header file containing a functional extention of the library to include generating a printable I2C Communication Result String (see Note #9 below).
   - **MCP9802_PString.h** - Header file for PString class (lighter alternative to String class) 
   - **MCP9802_PString.cpp** - Compilation file for PString class (lighter alternative to String class) 
 - **/examples**  
@@ -59,19 +59,9 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 
 ## GENERAL NOTES
 
-1) __I2C Communications Library__
+1) __I2C Communications Library Dependency__
 
-This library uses the '[WSWire](https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire)' library for I2C communication between the contoller IC (Master) and the MCP9802 (Slave), so it is __NECESSARY__ to have it installed prior to using the current libraty. 
-
-Alternatively, if you wish to use the '[Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire)' - or any other I2C library for that matter - simply change the following line the the __MCP9802.h__ file:
-```
-#include <WSWire.h>
-```
-to this:
-```
-#include <Wire.h>  // or to whatever I2C library name you are using.
-```
-As noted above, whichever library you intend to use for this purpose __must be alredy installed__ for the MCP9802 library to work.
+This library depends on the Arduino IDE's native '[Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire)' library for I2C communication between the Arduino (Master) and the MCP9802 (Slave). 
 
 2) __Device Temperature Range__
 
@@ -129,7 +119,7 @@ Begin by installing the library either by using the Arduino IDE's Installation W
 Next, include the library at the top of the sketch as follows:
 
 ```
-#include <MCP9802.h>
+#include "MCP9802.h"
 ```
 
 At this point you can construct a new MPC9802 object(s) by using the following command (at the top of the sketch after the 'include' line):
@@ -310,12 +300,10 @@ Please report any issues/bugs/suggestions at the [Issues](https://github.com/nad
 
 ## TODO
 
-* __CORE LIBRARY__: re-write getData() function to include Continuous and Single-Shot Modes and remove singleCon() function
 * __CORE LIBRARY__: add emptyBuffer() function and amend I2C communication functions to include 3 attempts to get data
-* __CORE LIBRARY__: Change setX() functions to work with masks (?)
+* __CORE LIBRARY__: Change setX() functions to work with bitMasks (?)
 * __CORE LIBRARY__: Create interger-math methods for getting/setting Temp/Hyst/Limit   
 * __CORE LIBRARY__: Add running average functionality  
-* __MCP9802ComStr__: Move to independent Library  
 
 ## VERSION HISTORY
 
@@ -324,6 +312,7 @@ __Ver. 1.1.0__ - Small change in functionality: attempting to set hysteresis or 
 __Ver. 1.2.0__ - Changed license to MIT (5.10.16)  
 __Ver. 1.3.0__ - Changed auxilliary functions: MCP9802InfoStr() and MCP9802ComStr() to work with the PString class instead of the String class to further reduce memory footprint. For this purpose, added PString.h & PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) field to device information string (9.10.16)  
 __Ver. 1.4.0__ - Added namespaces to prevent conflicts with other libraries (15.10.16)  
+__Ver. 1.5.0__ - Switched from 'WSWire' library to 'Wire' library for I2C communications (24.10.16)
 
 ## LICENSE
 

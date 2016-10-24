@@ -10,14 +10,7 @@
   (Ambient Temperature, Limit, and Hysteresis). And finally, it verifies that the Alert functionality is working as it should (at least, 
   in default mode).
   
-  INPORTANT: This library uses the 'WSWire' library (https://github.com/steamfire/WSWireLib/tree/master/Library/WSWire) for I2C communication with 
-  the MCP9802, so it is NECESSARY to have it installed prior to using the current libraty. Alternatively, if you wish to use the 'Wire' library 
-  (https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) - or any other I2C library for that matter - simply change 
-  the following line the the 'MCP9802.h' file:
-      #include <WSWire.h>
-  to this:
-      #include <Wire.h>  // or to whatever I2C library name you are using.
-  As noted above, whichever library you intend to use for this purpose must be alredy installed for the ADS1110 library to work.
+  INPORTANT: The current library depends on the Arduino IDE's native 'Wire' library for I2C communication between the Arduino (Master) and the MCP9802 (Slave).
 
   WIRING DIAGRAM
   --------------

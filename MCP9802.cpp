@@ -16,6 +16,7 @@
                  PString.cpp files to /utility folder. In addition added "I2C STATUS" (CONNECTED / NOT CONNECTED) 
                  field to device information string (9.10.16)
     Ver. 1.4.0 - Added namespaces to prevent conflicts with other libraries (15.10.16)
+    Ver. 1.5.0 - Switched from 'WSWire' library to 'Wire' library for I2C communications (24.10.16)
 
  *==============================================================================================================*
     LICENSE
@@ -54,7 +55,7 @@ __asm volatile ("nop");
 MCP9802::MCP9802(byte devAddr) {
     _devAddr      = devAddr;
     _tempUnit     = CELSIUS;
-    _comBuffer    = COM_SUCCESS;                // change to ping() ?
+    _comBuffer    = ping();
     _singleConfig = DEFAULT_CONFIG;
 }
 
