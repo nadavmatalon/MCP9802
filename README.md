@@ -141,7 +141,7 @@ MCP9802 device_name(device_address);
 >__NOTE__: replace the '__device_name__' above with a name of your choice. Also, make sure to replace the variable '__device_address__' with the specific I2C address of your device - see I2C ADDRESSES section above.
 
 
-## LIBRARY METHODS
+## LIBRARY FUNCTIONS
 
 With the library installed & included in the sketch, and an MCP9802 object initiallized, the following functions are available (see the usage example sketch for a detailed implementation):
 
@@ -288,12 +288,12 @@ If you want to destruct an instantiated MCP9802 object, you can use the followin
 
 (* requires an additional '\#include' of the relevant *.h file as shown in the corresponding example sketches)
 
-__Mcp9802_ComStr::MCP9802ComStr();__  
+__MCP9802ComStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
 Description:&nbsp;&nbsp;Returns printable string containing human-friendly information about the device's latest I2C communication result  
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PString
 
-__Mcp9802_InfoStr::MCP9802InfoStr();__  
+__MCP9802InfoStr();__  
 Parameters:&nbsp;&nbsp;&nbsp;Name of an initialized MCP9802 instance  
 Description:&nbsp;&nbsp;Returns printable string containing detailed information about the device's current settings   
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PString
