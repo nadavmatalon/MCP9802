@@ -55,7 +55,7 @@ __asm volatile ("nop");
 MCP9802::MCP9802(byte devAddr) {
     _devAddr      = devAddr;
     _tempUnit     = CELSIUS;
-    _comBuffer    = ping();
+    _comBuffer    = COM_SUCCESS;
     _singleConfig = DEFAULT_CONFIG;
 }
 
