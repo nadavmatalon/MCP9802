@@ -122,14 +122,24 @@ Next, include the library at the top of the sketch as follows:
 #include "MCP9802.h"
 ```
 
-At this point you can construct a new MPC9802 object(s) by using the following command (at the top of the sketch after the 'include' line):
+At this point you can construct a new MPC9802 instance(s) by using the following command (at the top of the sketch after the 'include' line):
 
 ```
 MCP9802 device_name(device_address);
 ```
 
->__NOTE__: replace the '__device_name__' above with a name of your choice. Also, make sure to replace the variable '__device_address__' with the specific I2C address of your device - see I2C ADDRESSES section above.
+>Replace '__device_name__' with a name of your choice. Also, make sure to replace  '__device_address__' with the specific I2C address of your device (see I2C ADDRESSES Section above).
 
+Next, make sure to inlude an instruction for initializing the I2C Bus for the [Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) Library, as follows:
+
+(There's no need to include the [Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) Library at the top of the sketch as it's already included by the MCP9802 Library)
+
+```
+void setup() {
+    Wire.begin();
+    // ...other setup code...
+}
+```
 
 ## LIBRARY FUNCTIONS
 
@@ -272,7 +282,7 @@ If you want to destruct an instantiated MCP9802 object, you can use the followin
 ```
 ~MCP9802 device_name();
 ```
->__NOTE__: replace the '__device_name__' above with the name of your MCP9802 device.
+>Replace '__device_name__' with the name of your MCP9802 instance.
 
 ## Extended Functionality*
 
