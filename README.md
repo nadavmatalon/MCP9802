@@ -61,7 +61,7 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
 
 1) __I2C Communications Library Dependency__
 
-This library depends on the Arduino IDE's native '[Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire)' library for I2C communication between the Arduino (Master) and the MCP9802 (Slave). 
+This library depends on the Arduino IDE's native [Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) library for I2C communication between the Arduino (Master) and the MCP9802 (Slave). 
 
 2) __Device Temperature Range__
 
@@ -128,11 +128,11 @@ At this point you can construct a new MPC9802 instance(s) by using the following
 MCP9802 device_name(device_address);
 ```
 
->Replace '__device_name__' with a name of your choice. Also, make sure to replace  '__device_address__' with the specific I2C address of your device (see I2C ADDRESSES Section above).
+>Replace '__device_name__' with a name of your choice. Also, remember to replace  '__device_address__' with the specific I2C address of your device (see I2C ADDRESSES Section above).
 
-Next, make sure to inlude an instruction for initializing the I2C Bus for the [Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) Library, as follows:
+Next, make sure to include an instruction for initializing the I2C Bus for the [Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) Library, as follows:
 
-(There's no need to include the [Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) Library at the top of the sketch as it's already included by the MCP9802 Library)
+>There's no need to include the [Wire](https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/libraries/Wire) Library at the top of the sketch as it's already internally included by the MCP9802 Library.
 
 ```
 void setup() {
@@ -158,7 +158,7 @@ Description:&nbsp;&nbsp;&nbsp;Searches for the MCP9802 at the pre-defined I2C Bu
 4  ... Other error (lost bus arbitration, bus error, etc.)  
 5  ... Timed-out while trying to become Bus Master  
 6  ... Timed-out while waiting for data to be sent
->6 ... Unlisted error (potential future implementation/s)<br>
+\>6 ... Unlisted error (potential future implementation/s)<br>
 
 Returns:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte  
 
@@ -282,7 +282,7 @@ If you want to destruct an instantiated MCP9802 object, you can use the followin
 ```
 ~MCP9802 device_name();
 ```
->Replace '__device_name__' with the name of your MCP9802 instance.
+>Replace '__device_name__' with the name of the specific MCP9802 instance to be deleted.  
 
 ## Extended Functionality*
 
