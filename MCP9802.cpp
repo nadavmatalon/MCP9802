@@ -286,7 +286,7 @@ void MCP9802::endCall() {
 byte MCP9802::getConfig() {
     byte config;
     initCall(CONFIG);
-    endCall();                              // check if needed
+    endCall();
     if (_comBuffer == COM_SUCCESS) {
         Wire.requestFrom(_devAddr, CONFIG_BYTE);
         if (Wire.available() == CONFIG_BYTE) config = Wire.read();
