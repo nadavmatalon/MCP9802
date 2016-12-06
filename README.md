@@ -16,7 +16,9 @@ as well as a hardware I2C interface.
 
 This library contains a robust driver for the MCP9802 that exposes its entire functionality (i.e. Configuration, Temperature, Hysteresis, Limit, and Alert Settings), allowing the user to get/set data in degrees Celsius or Fahrenheit.
 
-[MCP9802 DATASHEET](http://ww1.microchip.com/downloads/en/DeviceDoc/21909d.pdf)
+<img src="extras/images/mcp9802_pinout.png" alt="MCP9802 PINOUT" width="350" height="240">
+
+Source: [MCP9802 DATASHEET](http://ww1.microchip.com/downloads/en/DeviceDoc/21909d.pdf)
 
 [MCP9802 DATASHEET ERRATA](http://ww1.microchip.com/downloads/en/DeviceDoc/80331B.pdf)
 
@@ -43,6 +45,8 @@ This library contains a robust driver for the MCP9802 that exposes its entire fu
   - **/eagle**
     - **MCP9802.sch** - Schematic file for the MCP9802 breakout board.
     - **MCP9802.brd** - Board layout file for the MCP9802 breakout board.
+  - **/images**
+    - **mcp9802_pinout.png** - Pinout image of the MCP9802.
 - **keywords.txt** - Keywords for this library which will be highlighted in sketches within the Arduino IDE. 
 - **library.properties** - General library properties for the Arduino's IDE (>1.5) Library Package Manager.
 - **README.md** - The readme file for this library.
