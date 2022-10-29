@@ -298,14 +298,17 @@ byte MCP9802::getConfig() {
     GET DATA REGISTERS VALUE (TEMPERATURE / HYSTERESIS / LIMIT)
  *==============================================================================================================*/
 
-float MCP9802::getData(reg_ptr_t ptr) {                                          // PARAMS: TEMP / HYST / LIMIT
-    float data = 0;
+float MCP9802::getData(reg_ptr_t ptr) {
+    int16_t raw_data;
+	float data = 0;
     initCall(ptr);
     endCall();
     if (_comBuffer == COM_SUCCESS) {
         Wire.requestFrom(_devAddr, DATA_BYTES);
-        if (Wire.available() == DATA_BYTES) data = (((Wire.read() << 8) | (Wire.read())) / 256.0);
-    }
+        if (Wire.available() == DATA_BYTES) raw_data = (((Wire.read() << 8) | (Wire.read())));
+		data = (float)raw_data / 256.0;
+	}
+
     return _tempUnit ? convertCtoF(data) : data;
 }
 
