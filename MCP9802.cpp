@@ -300,7 +300,7 @@ byte MCP9802::getConfig() {
 
 float MCP9802::getData(reg_ptr_t ptr) {
     int16_t raw_data;
-	float data = 0;
+    float data = 0;
     initCall(ptr);
     endCall();
     if (_comBuffer == COM_SUCCESS) {
